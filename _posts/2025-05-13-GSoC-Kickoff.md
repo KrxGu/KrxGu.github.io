@@ -41,10 +41,10 @@ Active on Matrix #architecture—feedback from maintainers Josh Morman & Danie
 
 🔗 Follow the journey
 
-Source repo: https://github.com/krxgu/gr4‑expansion
+Source repo: https://github.com/KrxGu/gnuradio4
 
 All blog posts RSS: https://krxgu.github.io/
 
 Ping me on Matrix: @krish_gupta:gnuradio.org
 
-Next up: finishing the WBFM demodulator and publishing a video of live FM radio entirely on GR4!Stay tuned, and feel free to drop suggestions or questions on my gmail: krishgupta2832@gmail.com
+Next up: Meet on 16th May with mentors mostly will be setting up the project!Stay tuned, and feel free to drop suggestions or questions on my gmail: krishgupta2832@gmail.com
