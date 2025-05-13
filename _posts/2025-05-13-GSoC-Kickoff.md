@@ -1,6 +1,6 @@
 ---
 title: "GSoC 2025 Kick‑off: Expanding the GNU Radio 4.0 Block Set"
-date: 2025-05-15 00:06:00 +0530
+date: 2025-05-15 12:00:00 +0530
 tags: [GSoC, GNU Radio, SDR, Progress]
 ---
 
