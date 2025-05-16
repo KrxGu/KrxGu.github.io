@@ -1,76 +1,45 @@
 ---
-title: Mentor Meeting1 – 16 May 2025
+title: Mentor Meeting #1 – 16 May 2025
 description: Notes from the first sync with Josh Morman and a quick primer on GNU Radio 3.x → 4.0 changes
 date: 2025-05-16
+description: First catch-up with mentor Josh Morman and a quick GR 3.x → 4.0 primer
 layout: post
 ---
 
-# 🚀 GSoC 2025 – GNU Radio 4.0 Block-Set Expansion  
-### _Kick-off call recap (Mentor: **Josh Morman**)_  
-
-|   |  |
-|---|---|
-| **Date** | 16 May 2025 |
-| **Duration** | 45 min |
-| **Participants** | Josh Morman (mentor) · Krish Gupta (GSoC student) |
-| **Goal** | Align on development environment, licensing, workflow, and testing strategy for porting math blocks to GNU Radio 4.0 |
+# 🎯 Kick-off call – 16 May 2025  
+**Project:** GSoC 2025 – “Expanding the GNU Radio 4.0 Block Set”  
+**Mentor:** Josh Morman • **Student:** Krish Gupta  
 
 ---
 
-## ✅ Action items & decisions
+## What we agreed on
 
-1. **`work()` ➜ `processBulk()` migration**  
-   * All legacy blocks use `work()`; new blocks must implement `processBulk()` (or `processOne()` for scalar paths).  
-   * Keep vectorisation (`std::simd`) in mind from day 1; design kernels to operate on spans, not individual samples.
-
-2. **Compiler toolchain**  
-   * **GCC 14** will be the reference compiler for the whole summer (has complete C++23 _and_ `std::format` support).  
-   * CI matrix will still build with Clang ≥ 17, but primary optimisation work happens on GCC 14.
-
-3. **Repository workflow**  
-   * I’ll hack in **`gr4-incubator(or whatever ralph likes)`** (a fresh repo living **inside** the overall GNU Radio workspace).  
-   * Feature branches stay there until the final “merge week”; then we create one polished PR against the main GR 4.0 tree.  
-   * Benefit: avoids noisy intermediate PRs and keeps review focused.
-
-4. **Unit-test philosophy**  
-   * Tests must exercise **scalar**, **SIMD**, and **mixed-width** paths.  
-   * Minimum target: 95 % line coverage for each new block.  
-   * All CI runs under `-march=native -O3 -ftree-vectorize`.
-
-5. **Licensing plan**  
-   | Code origin | Licence during development | Final licence |
-   |-------------|----------------------------|---------------|
-   | Brand-new code | **MIT** (Josh will drop `LICENSE.txt` scaffold) | TBD – can stay MIT |
-   | Code copied/adapted from GR 3.x | Must stay **GPL-3.0-or-later** | May re-licence to LGPL if all copyright holders agree |
-   | Small snippets (≪ 10 LOC) | MIT, attribute original file | n/a |
+| # | Decision |
+|---|----------|
+| **1** | **`work()` → `processBulk()`** is the new normal. All ports I migrate must follow the 4.0 API and be SIMD-friendly from the outset. |
+| **2** | **GCC 14** is our reference compiler (brings full C++23 plus `std::format`). CI will still test Clang ≥ 17, but optimisation happens on GCC. |
+| **3** | I’ll develop in a **separate incubator repo** inside the GNU Radio workspace (`gr4-incubator`, or whatever name Ralph prefers). Only when everything is green will we open one polished PR against the main 4.0 tree. |
+| **4** | **Unit tests first.** Aim for ~95 % coverage and make sure scalar *and* SIMD code paths run in CI (`-march=native -O3 -ftree-vectorize`). |
+| **5** | **Licensing:**<br>— Brand-new code starts as **MIT** (Josh will drop a `LICENSE.txt`).<br>— Anything lifted from GR 3.x stays **GPL-3.0-or-later**. We can later re-license to LGPL if every copyright holder consents.<br>— Tiny snippets (≪ 10 LOC) can remain MIT with attribution. |
 
 ---
 
-## 🔄  Quick reference – What actually changed from GR 3.x to 4.0?
+## Quick GR 3 → 4 cheat-sheet
 
-| Category | GNU Radio 3.x | GNU Radio 4.0 | Why it helps us |
-|----------|---------------|---------------|-----------------|
-| **Block API** | `sync_block::work()` | `Block<>::processBulk()` / `processOne()` | Cleaner templates, simpler signatures |
-| **Port system** | Fixed, typed by class name (`multiply_const_ff`) | `PortIn<T> / PortOut<T>`, type = template param | One template covers all numeric types |
-| **SIMD** | Manual intrinsics or helper (`fast_cc_multiply`) | Automatic via `std::simd` – compile-time dispatch | Free vectorisation on AVX/NEON |
-| **Reflection** | None → hand-written setters & XML | `GR_MAKE_REFLECTABLE` exposes ports/props | GUI & Python wrappers auto-generate |
-| **Registration** | Factory + separate GRC XML | `GR_REGISTER_BLOCK` one-liner | Zero boilerplate for new blocks |
-| **Build system** | CMake + Boost | Meson + no Boost core | Faster compilation, easier cross-compile |
-| **Licensing norm** | GPL-3.0-or-later everywhere | Project can mix MIT / LGPL / GPL | Allows permissive licensing for new code |
-
----
-
-> _“Focus first on exhaustive tests and clean SIMD-friendly kernels; polish GUIs later.”_  
-> — Josh Morman, 16 May 2025
+| Area | 3.x | 4.0 | Win for us |
+|------|-----|-----|-----------|
+| Block API | `sync_block::work()` | `Block<>::processBulk()` / `processOne()` | simpler kernels, fewer virtual calls |
+| Ports | hard-coded (`multiply_const_ff`) | `PortIn<T> / PortOut<T>` | one template covers every numeric type |
+| SIMD | manual intrinsics | auto with `std::simd` | free vectorisation |
+| Reflection | none; hand-written XML | `GR_MAKE_REFLECTABLE` | GUI & Python glue generate themselves |
+| Registration | factory + GRC XML | `GR_REGISTER_BLOCK` | zero boilerplate |
+| Build | CMake + Boost | Meson, no Boost core | faster compile, easier cross-compile |
 
 ---
 
-## Changelog
+## Next up
 
-| Date | Change |
-|------|--------|
-| 2025-05-16 | Initial meeting notes added |
+* Josh will scaffold the incubator repo and drop in the MIT licence.
+* I’ll prototype a **tiny `AddConst` block** with a matching GoogleTest suite, exercising both scalar and SIMD paths.
 
----
-
-**Next up:** josh will set up my seprate repo under gnu radio workspace and will set mit licences meanwhile i will play around basic blocks
+Stay tuned!
