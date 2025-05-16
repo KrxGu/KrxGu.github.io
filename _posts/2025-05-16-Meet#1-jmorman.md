@@ -1,5 +1,5 @@
 ---
-title: Mentor Meeting #1 – 16 May 2025
+title: Mentor Meeting1 – 16 May 2025
 description: Notes from the first sync with Josh Morman and a quick primer on GNU Radio 3.x → 4.0 changes
 date: 2025-05-16
 layout: post
