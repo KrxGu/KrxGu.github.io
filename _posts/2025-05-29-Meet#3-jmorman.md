@@ -19,7 +19,8 @@ layout: post
 ## 1 · Progress update <!--──────────────────────────-->
 
 * **Math block**  
-  * **All red-dot headers** on the tracker are now compiling under GR-4 (`Abs`, `AddConst`, `MultiplyConst`, …).
+  * **75% of MATH headers** were ported and are now compiling/building under GR-4 (`AddConst`, `SubtractConst`,  `MultiplyConst`,  `DivideConst`,  `Add`,  `Subtract`, `Multiply`, `Divide`, `Max`, `Min`,  `And`, `Or`, `Xor`, `Negate`, `Not`, `Abs`, `Integrate`, `Argmax`.
+).
   * **`Conjugate` & `Log`** raised type/`std::simd` edge cases ⇒ plan is to split out a dedicated `Conjugate.hpp` that wraps both the scalar and SIMD/complex specialisations.
   * **Unit tests** (`qa_math.cpp`) extended to cover zero-input, NaN/Inf, and extreme-range values.
 
@@ -77,5 +78,5 @@ Josh will adjust the skeleton so this drops in cleanly.
 | **Krish** | • Finish SIMD kernel for **Conjugate** block.<br>• Extend edge-case tests for **Log**.<br>• Draft **“Porting 101”** doc for newcomers. |
 | **Josh** | • Commit initial **gr-incubator** CMake scaffold.<br>• Ping Ralph for doc-progress confirmation. |
 
-> **Next sync**: early next week, once the CMake skeleton lands and SIMD builds succeed on **GCC 14** & **Clang 17**.
 ---
+>**Next sync**: early next week, once the CMake skeleton lands and SIMD builds succeed on **GCC 14** & **Clang 17**.
