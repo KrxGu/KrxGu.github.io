@@ -31,8 +31,8 @@ layout: post
 | Block API | `sync_block::work()` | `Block<>::processBulk()` / `processOne()` | simpler kernels, fewer virtual calls |
 | Ports | hard-coded (`multiply_const_ff`) | `PortIn<T> / PortOut<T>` | one template covers every numeric type |
 | SIMD | manual intrinsics | auto with `std::simd` | free vectorisation |
-| Reflection | none; hand-written XML | `GR_MAKE_REFLECTABLE` | GUI & Python glue generate themselves |
-| Registration | factory + GRC XML | `GR_REGISTER_BLOCK` | zero boilerplate |
+| Reflection | none; hand-written YAML | `GR_MAKE_REFLECTABLE` | GUI & Python glue generate themselves |
+| Registration | factory + GRC YAML | `GR_REGISTER_BLOCK` | zero boilerplate |
 | Build | CMake + Boost | Meson, no Boost core | faster compile, easier cross-compile |
 
 ---
