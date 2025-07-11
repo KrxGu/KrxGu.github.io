@@ -1,0 +1,1868 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GNU Radio 3.x to 4.0 Porting Guide</title>
+    <style>
+        /* GNU Radio Documentation Style */
+        body {
+            font-family: sans-serif;
+            line-height: 1.4;
+            color: #000;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #fff;
+            font-size: 15px;
+        }
+
+        /* Banner - Clean GNU Radio Style */
+        .banner-wrapper {
+            text-align: center;
+            padding: 2rem 1rem;
+            margin-bottom: 2rem;
+            background: #fff;
+            border-bottom: 1px solid #ddd;
+        }
+
+                 .banner-logos {
+             display: flex;
+             justify-content: center;
+             align-items: center;
+             gap: 2rem;
+             margin-bottom: 1rem;
+         }
+
+         .banner-logos img {
+             height: 80px;
+             width: auto;
+         }
+
+        .banner-title {
+            font-size: 26px;
+            font-weight: normal;
+            color: #000;
+            margin: 0;
+            font-family: sans-serif;
+        }
+
+        .banner-title .highlight-orange {
+            color: #ff6a00;
+        }
+
+        .banner-title .highlight-blue {
+            color: #4a90e2;
+        }
+
+        /* Table of Contents - GNU Radio Wiki Style */
+        .toc {
+            background: #f9f9f9;
+            border: 1px solid #aaa;
+            padding: 1rem;
+            margin-bottom: 2rem;
+            font-size: 14px;
+        }
+
+        .toc h2 {
+            margin: 0 0 1rem 0;
+            font-size: 16px;
+            font-weight: bold;
+            color: #000;
+            border-bottom: 1px solid #aaa;
+            padding-bottom: 0.5rem;
+        }
+
+        .toc ul {
+            list-style: none;
+            padding-left: 0;
+            margin: 0;
+        }
+
+        .toc li {
+            margin: 0.25rem 0;
+            padding-left: 1rem;
+        }
+
+        .toc a {
+            text-decoration: none;
+            color: #0645ad;
+        }
+
+        .toc a:hover {
+            text-decoration: underline;
+        }
+
+        /* Sections - GNU Radio Documentation Style */
+        .section {
+            margin-bottom: 2rem;
+        }
+
+        .section h2 {
+            color: #000;
+            border-bottom: 1px solid #aaa;
+            padding-bottom: 0.25rem;
+            margin-bottom: 1rem;
+            font-size: 19px;
+            font-weight: bold;
+        }
+
+        .section h3 {
+            color: #000;
+            margin-top: 1.5rem;
+            margin-bottom: 0.5rem;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .subsection {
+            margin-left: 0;
+            padding: 0.5rem 0;
+        }
+
+        /* Highlight boxes - GNU Radio Wiki style */
+        .highlight-box {
+            background: #f0f8ff;
+            border: 1px solid #b0c4de;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+
+        .highlight-box strong {
+            color: #000;
+        }
+
+        /* Code blocks - GNU Radio style */
+        .code-placeholder {
+            background: #f5f5f5;
+            border: 1px solid #ccc;
+            padding: 1rem;
+            font-family: 'Courier New', monospace;
+            color: #000;
+            font-style: normal;
+            font-size: 13px;
+            margin: 1rem 0;
+            white-space: pre-wrap;
+            overflow-x: auto;
+        }
+
+        /* Tables - GNU Radio Wiki style */
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+            font-size: 14px;
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            border: 1px solid #a2a9b1;
+            padding: 0.5rem;
+            text-align: left;
+        }
+
+        .comparison-table th {
+            background: #eaecf0;
+            font-weight: bold;
+        }
+
+        .comparison-table code {
+            background: #f8f9fa;
+            padding: 0.1rem 0.3rem;
+            font-family: monospace;
+            font-size: 13px;
+        }
+
+        /* Links */
+        a {
+            color: #0645ad;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        /* Footer */
+        footer {
+            margin-top: 3rem;
+            padding: 2rem;
+            text-align: center;
+            border-top: 1px solid #aaa;
+            color: #666;
+            font-size: 13px;
+        }
+
+        footer a {
+            color: #0645ad;
+        }
+    </style>
+</head>
+<body>
+    <!-- Banner Section -->
+    <div class="banner-wrapper">
+        <div class="banner-logos">
+            <img src="https://ettus.com/wp-content/uploads/2018/11/GNU.png" alt="GNU Radio logo" />
+            <span style="font-size: 48px; color: #ff6a00; font-weight: bold; margin: 0 1rem;">×</span>
+            <img src="https://www.pymc.io/_images/GSoC_banner.png" alt="Google Summer of Code logo" style="height: 100px;" />
+        </div>
+        <h1 class="banner-title">
+            <span class="highlight-orange">From 3.x</span> <span class="highlight-blue">to 4.0</span><br>
+            GNU Radio Porting Guide<br>
+            <span style="font-size: 20px; color: #666;">(GSoC 2025)</span>
+        </h1>
+        <div style="text-align: center; margin-top: 1rem; font-size: 16px; color: #333;">
+            <strong>By Krish Gupta</strong><br>
+            <em>Mentor: Josh Morman</em>
+        </div>
+    </div>
+
+    <!-- Table of Contents -->
+    <div class="toc">
+        <h2>📋 Contents</h2>
+        <ul>
+            <li><a href="#overview--motivation">1. Overview & Motivation</a></li>
+            <li><a href="#prerequisites--setup">2. Prerequisites & Setup</a></li>
+            <li><a href="#architecture-changes--3x-vs-40">3. Architecture Changes – 3.x vs 4.0</a></li>
+            <li><a href="#step-by-step-porting-workflow">4. Step‑by‑Step Porting Workflow</a></li>
+            <li><a href="#block-api-migration">5. Block API Migration</a></li>
+            <li><a href="#simd-optimisation">6. SIMD Optimisation</a></li>
+            <li><a href="#reflection--registration-system">7. Reflection & Registration System</a></li>
+            <li><a href="#testing--validation">8. Testing & Validation</a></li>
+            <li><a href="#complete-porting-examples">9. Complete Porting Examples</a></li>
+            <li><a href="#best-practices--conventions">10. Best Practices & Conventions</a></li>
+            <li><a href="#troubleshooting-common-issues">11. Troubleshooting Common Issues</a></li>
+            <li><a href="#resources--references">12. Resources & References</a></li>
+        </ul>
+    </div>
+
+    <!-- Section 1: Overview -->
+    <div class="section" id="overview--motivation">
+        <h2>1 Overview & Motivation</h2>
+        
+        <h3>🎯 Why Port to GNU Radio 4.0?</h3>
+        <div class="subsection">
+            <p>GNU Radio 4.0 ("GR4") is a <strong>ground‑up rewrite</strong> of the 3.x series. It trades Boost and decade‑old macros for modern C++23 features, an all‑new lock‑free scheduler, and auto‑vectorised math using <code>&lt;experimental/simd&gt;</code>. Porting frequently‑used GR3 blocks means <strong>everyone</strong>—students, hobbyists, scientists—can enjoy:</p>
+            
+            <ul>
+                <li><strong>2–3× speed‑ups</strong> on the same hardware (lock‑free buffers + <code>std::simd</code>).</li>
+                <li><strong>Type‑safe ports & parameters</strong> that surface cleanly in Python and soon‑to‑arrive GUI tools.</li>
+                <li><strong>Zero‑boilerplate GUIs</strong>: one macro registers the block, generates YAML + Python stubs.</li>
+            </ul>
+        </div>
+
+        <h3>🔍 What This Guide Covers</h3>
+        <div class="subsection">
+            <ul>
+                <li><strong>Audience</strong> Absolute beginners to GNU Radio internals.</li>
+                <li><strong>Scope</strong> End‑to‑end porting <strong>inside the <em>main</em> <code>fair‑acc/gnuradio4</code> repo</strong>—no OOT module glue required. You'll learn how to:
+                    <ol>
+                        <li>Read an old GR3 block.</li>
+                        <li>Map its concepts to the new API.</li>
+                        <li>Open a Pull Request (PR) with DCO sign‑off.</li>
+                    </ol>
+                </li>
+                <li><strong>Non‑Goals</strong> FPGA (RFNoC) paths, GUI designer, or containerising flowgraphs.</li>
+            </ul>
+        </div>
+
+        <h3>📊 Is Your Block a Good Candidate?</h3>
+        <div class="subsection">
+            <p>Ask yourself:</p>
+            
+            <table class="comparison-table">
+                <tr>
+                    <th>Question</th>
+                    <th>Heuristic</th>
+                </tr>
+                <tr>
+                    <td><em>Used by many flowgraphs?</em></td>
+                    <td>Check GitHub search or your own notebooks.</td>
+                </tr>
+                <tr>
+                    <td><em>Algorithm self‑contained?</em></td>
+                    <td>Fewer external deps = faster port.</td>
+                </tr>
+                <tr>
+                    <td><em>Contains hand‑written intrinsics?</em></td>
+                    <td>Great! We'll swap them for <code>std::simd</code>.</td>
+                </tr>
+                <tr>
+                    <td><em>Does it allocate big buffers?</em></td>
+                    <td>Might need redesign with <code>std::span</code>.</td>
+                </tr>
+            </table>
+            
+            <p>If you answer <strong>yes</strong> to the first two, dive in.</p>
+        </div>
+    </div>
+
+    <!-- Section 2: Prerequisites -->
+    <div class="section" id="prerequisites--setup">
+        <h2>2 Prerequisites & Setup</h2>
+        
+        <div class="highlight-box">
+            <strong>Quick‑start: one command, zero surprises</strong><br>
+            <code>docker pull --platform linux/amd64 ghcr.io/fair-acc/gr4-build-container:latest</code>
+        </div>
+
+        <h3>🛠 Toolchain Basics (Bare‑Metal)</h3>
+        <div class="subsection">
+            <table class="comparison-table">
+                <tr>
+                    <th>Tool</th>
+                    <th>Min Version</th>
+                    <th>Why</th>
+                </tr>
+                <tr>
+                    <td><strong>GCC</strong></td>
+                    <td>≥13.3 (≥14.2 for full <code>&lt;experimental/simd&gt;</code>)</td>
+                    <td>minimum to compile GR4</td>
+                </tr>
+                <tr>
+                    <td><strong>Clang</strong></td>
+                    <td>18 (recommended)</td>
+                    <td>faster builds, great diagnostics</td>
+                </tr>
+                <tr>
+                    <td><strong>CMake</strong></td>
+                    <td>3.25</td>
+                    <td>presets & fetched content</td>
+                </tr>
+                <tr>
+                    <td><strong>Ninja</strong></td>
+                    <td>any</td>
+                    <td>parallel build engine</td>
+                </tr>
+                <tr>
+                    <td><strong>Python</strong></td>
+                    <td>3.10</td>
+                    <td>unit‑test harness & bindings</td>
+                </tr>
+            </table>
+
+            <p>Install on Ubuntu 24.04:</p>
+            
+            <div class="code-placeholder">sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
+sudo apt update
+sudo apt install gcc-14 g++-14 clang-18 cmake ninja-build git python3-pip -y
+export CC=gcc-14 CXX=g++-14  # or clang-18/clang++-18</div>
+        </div>
+
+        <h3>🐳 Docker Route (Recommended for Beginners)</h3>
+        <div class="subsection">
+            <ol>
+                <li><strong>Pull</strong> the container (see quick‑start).</li>
+                <li><strong>Run</strong> with the current repo mounted:</li>
+            </ol>
+            
+            <div class="code-placeholder">docker run --rm -it \
+  --volume="${PWD}:/work/src" \
+  --workdir="/work/src" \
+  ghcr.io/fair-acc/gr4-build-container:latest bash</div>
+            
+            <p>3. Inside the shell, configure + build:</p>
+            
+            <div class="code-placeholder">rm -rf build && mkdir build && cd build
+cmake -DCMAKE_BUILD_TYPE=RelWithAssert -DGR_ENABLE_BLOCK_REGISTRY=ON ..
+cmake --build . -j$(nproc)
+ctest --output-on-failure -j$(nproc)</div>
+        </div>
+
+        <h3>💡 ZRAM Route (If Your Laptop Runs Out of RAM)</h3>
+        <div class="subsection">
+            <p>Building GR4 can transiently spike to <strong>6 GB+</strong> of RAM with GCC's heavy templates. If your system swaps to disk, compile times crawl. <strong>zram</strong> swaps to <em>compressed RAM</em> instead of SSD.</p>
+            
+            <div class="code-placeholder"># Enable 8 GiB zram swap (needs sudo)
+cd gnuradio4
+sudo ./enableZRAM.sh  # provided in repo root
+
+# Build as usual
+mkdir -p build && cd build
+cmake -DCMAKE_BUILD_TYPE=RelWithAssert ..
+cmake --build . -j$(nproc)
+
+# Afterwards, free the device
+sudo swapoff /dev/zram0
+echo 1 | sudo tee /sys/block/zram0/reset</div>
+            
+            <p>♻️ <em>Rule of thumb:</em> if <code>free -h</code> shows >80 % memory used during compile, enable zram.</p>
+        </div>
+
+        <h3>🗂 Working Inside the Main Repo</h3>
+        <div class="subsection">
+            <div class="code-placeholder"># 1. Fork the repo on GitHub
+# 2. Clone your fork
+
+git clone https://github.com/&lt;you&gt;/gnuradio4.git
+cd gnuradio4
+git remote add upstream https://github.com/fair-acc/gnuradio4.git
+
+git checkout -b port/math/MultiplyConst
+# ...hack...
+
+# 3. Commit w/ DCO & push
+
+git add .
+git commit -s -m "feat(math): port MultiplyConst block (float & complex)"
+git push origin port/math/MultiplyConst
+# 4. Open PR → choose 'Create pull request'</div>
+            
+            <div class="highlight-box">
+                <strong>Tip</strong> Use <code>git push --force-with-lease</code> (not <code>--force</code>) when you squash‑rebase.
+            </div>
+        </div>
+    </div>
+
+    <!-- Section 3: Architecture Changes -->
+    <div class="section" id="architecture-changes--3x-vs-40">
+        <h2>3 Architecture Changes – 3.x vs 4.0</h2>
+
+        <h3>3.1 What You're Really Looking At</h3>
+        <div class="subsection">
+            <table class="comparison-table">
+                <tr>
+                    <th>Version</th>
+                    <th>What the snippet actually is</th>
+                    <th>Where it lives</th>
+                </tr>
+                <tr>
+                    <td><strong>3.x</strong></td>
+                    <td><code>gr_math.h</code> – utility header with inline helpers (fast complex‑multiply, lookup tables, etc.). <strong>Not</strong> a block.</td>
+                    <td>Part of <em>gr‑core</em>; many math blocks call these helpers.</td>
+                </tr>
+                <tr>
+                    <td><strong>4.0</strong></td>
+                    <td><code>math.hpp</code> – <strong>collection of fully‑fledged blocks</strong> (<code>Add</code>, <code>Multiply</code>, <code>AddConst</code>, …) written with the new <code>gr::Block&lt;&gt;</code> API.</td>
+                    <td>Lives in <em>gr::blocks::math</em>; each instantiation registered via <code>GR_REGISTER_BLOCK</code>.</td>
+                </tr>
+            </table>
+            
+            <div class="highlight-box">
+                <strong>So:</strong> GR3's header <em>supports</em> math <strong>inside</strong> blocks, whereas GR4's header <em>is</em> the math blocks.
+            </div>
+        </div>
+
+        <h3>3.2 Key API Differences</h3>
+        <div class="subsection">
+            <table class="comparison-table">
+                <tr>
+                    <th>Category</th>
+                    <th>GNU Radio 3.x</th>
+                    <th>GNU Radio 4.0</th>
+                    <th>Why it matters</th>
+                </tr>
+                <tr>
+                    <td><strong>Language era</strong></td>
+                    <td>C++03/11, Boost, macros</td>
+                    <td>C++23-ready code (concepts, <code>std::span</code>) + <code>std::simd</code> from <code>&lt;experimental/simd&gt;</code></td>
+                    <td>Safer code, fewer macros, faster binaries</td>
+                </tr>
+                <tr>
+                    <td><strong>Block base</strong></td>
+                    <td>Inherit <code>gr::sync_block</code>, override <code>work()</code></td>
+                    <td><code>gr::Block&lt;Derived&gt;</code> (CRTP) → <code>processBulk()</code></td>
+                    <td>Compile‑time errors instead of run‑time segfaults</td>
+                </tr>
+                <tr>
+                    <td><strong>Port model</strong></td>
+                    <td>Hard‑coded indices</td>
+                    <td><code>PortIn&lt;T&gt;</code>/<code>PortOut&lt;T&gt;</code> templates</td>
+                    <td>Type‑safe, introspectable</td>
+                </tr>
+                <tr>
+                    <td><strong>Registration</strong></td>
+                    <td>Custom <code>make()</code> + YAML</td>
+                    <td>One‑liner <code>GR_REGISTER_BLOCK</code></td>
+                    <td>Slashes boilerplate</td>
+                </tr>
+                <tr>
+                    <td><strong>Vectorisation</strong></td>
+                    <td>Manual intrinsics</td>
+                    <td><code>std::simd</code> auto‑vector</td>
+                    <td>Free speed on AVX/NEON</td>
+                </tr>
+                <tr>
+                    <td><strong>Scheduler</strong></td>
+                    <td>Thread‑per‑block</td>
+                    <td>Task‑based executor (currently Folly; conceptually similar to TBB)</td>
+                    <td>Better CPU utilisation</td>
+                </tr>
+                <tr>
+                    <td><strong>Live parameter change</strong></td>
+                    <td>Custom setters & mutex</td>
+                    <td>Any reflected member mutable at run‑time</td>
+                    <td>Zero extra C++ for AGC, etc.</td>
+                </tr>
+            </table>
+        </div>
+
+        <h3>3.3 Concrete Example – <em>Multiply‑by‑Constant</em></h3>
+        <div class="subsection">
+            <table class="comparison-table">
+                <tr>
+                    <th>Aspect</th>
+                    <th>Old 3.x</th>
+                    <th>New 4.0</th>
+                    <th>Benefit</th>
+                </tr>
+                <tr>
+                    <td>Source files</td>
+                    <td>10+ variants (<code>*_ff</code>, <code>*_cc</code>, …)</td>
+                    <td><strong>1</strong> template</td>
+                    <td>10× less code</td>
+                </tr>
+                <tr>
+                    <td>Port declaration</td>
+                    <td>Raw pointer arrays</td>
+                    <td><code>PortIn&lt;T&gt; in; PortOut&lt;T&gt; out;</code></td>
+                    <td>Compilation catches mismatch</td>
+                </tr>
+                <tr>
+                    <td>Parameter</td>
+                    <td>Private <code>k_</code>, setter</td>
+                    <td>Public <code>value</code> reflected</td>
+                    <td>No boilerplate</td>
+                </tr>
+                <tr>
+                    <td>SIMD</td>
+                    <td>Optional helper call</td>
+                    <td>Automatic if compiler supports it</td>
+                    <td>Speed</td>
+                </tr>
+                <tr>
+                    <td>GUI</td>
+                    <td>Separate YAML + Python glue</td>
+                    <td>Code‑gen from reflection</td>
+                    <td>Less maintenance</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <!-- Section 4: Porting Workflow -->
+    <div class="section" id="step-by-step-porting-workflow">
+        <h2>4 Step‑by‑Step Porting Workflow</h2>
+        
+        <div class="highlight-box">
+            <strong>Roadmap</strong> Follow each sub‑step and run tests after <em>every</em> compile.
+        </div>
+
+        <h3>4.1 Pre‑Port Checklist</h3>
+        <div class="subsection">
+            <ul>
+                <li>☑ Build <strong>current</strong> GR4 master so you know environment is sane.</li>
+                <li>☑ Pick a small block first (e.g., <code>AddConst</code>).</li>
+                <li>☑ Search for duplicated code (<code>grep -R "fast_.*_cc"</code>).</li>
+                <li>☐ Sketch a tiny flowgraph (.py) that exercises the block.</li>
+            </ul>
+        </div>
+
+        <h3>4.2 Porting at a Glance</h3>
+        <div class="subsection">
+            <p><em>[Mermaid diagram would be rendered here showing the workflow: Understand GR3 block → Copy tests to /tests → Write GR4 skeleton header → Port algorithm → processBulk → Add GR_MAKE_REFLECTABLE → Register block → Compile & run tests → Open PR]</em></p>
+        </div>
+
+        <h3>4.3 Incremental Commits</h3>
+        <div class="subsection">
+            <p>Commit <strong>every compiling state</strong>:</p>
+            
+            <div class="code-placeholder"># good habit
+cmake --build build -j$(nproc) && ctest --output-on-failure</div>
+            
+            <p>When tests fail, <code>git stash</code> small experiments—keep main branch green.</p>
+        </div>
+    </div>
+
+    <!-- Section 5: Block API Migration -->
+    <div class="section" id="block-api-migration">
+        <h2>5 Block API Migration</h2>
+
+        <h3>5.1 From <code>work()</code> to <code>processBulk()</code> (Beginner Friendly)</h3>
+        <div class="subsection">
+            <p><strong>Old way</strong> (pseudo‑code):</p>
+            
+            <div class="code-placeholder">int work(int noutput_items,
+         gr_vector_const_void_star& input_items,
+         gr_vector_void_star&       output_items) {
+    const float*  in  = (const float*)input_items[0];
+    float*        out = (float*)output_items[0];
+    for (int i=0;i&lt;noutput_items;i++)
+        out[i] = in[i] * k_;
+    return noutput_items;
+}</div>
+            
+            <p><strong>Problems:</strong> raw casts, no bounds check.</p>
+            
+            <p><strong>New way:</strong></p>
+            
+            <div class="code-placeholder">work_return_t processBulk(std::span&lt;const float&gt; in,
+                          std::span&lt;float&gt;      out) {
+    for (std::size_t i = 0; i &lt; in.size(); ++i)
+        out[i] = in[i] * value;   // 'value' is reflected param
+    return {out.size(), Status::OK};
+}</div>
+            
+            <p><em>Key points for beginners:</em></p>
+            
+            <ol>
+                <li><code>std::span</code> is like a safe pointer + length.</li>
+                <li>The <code>work_return_t</code> tells the scheduler how many items you produced.</li>
+                <li>No virtual calls—<code>processBulk()</code> is a normal function.</li>
+            </ol>
+        </div>
+
+        <h3>5.2 Declaring Ports</h3>
+        <div class="subsection">
+            <div class="code-placeholder">GR_DECLARE_PORT(in,  PortIn&lt;float&gt;);
+GR_DECLARE_PORT(out, PortOut&lt;float&gt;);</div>
+            
+            <p>That's it—no magic numbers like <code>input_items[0]</code>.</p>
+        </div>
+
+        <h3>5.3 Reflection One‑Liner</h3>
+        <div class="subsection">
+            <div class="code-placeholder">GR_MAKE_REFLECTABLE(MultiplyConst,
+    (float, value, "Multiplier", 1.0f, "Constant gain factor"));</div>
+            
+            <p>This auto‑generates (CMake script picks up the reflection data and writes YAML + Python stubs):</p>
+            
+            <ul>
+                <li>YAML entry for future GUI.</li>
+                <li>Python binding (<code>gr.blocks.math.multiply_const</code>).</li>
+                <li>Run‑time property that can be tweaked live.</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Section 6: SIMD Optimization -->
+    <div class="section" id="simd-optimisation">
+        <h2>6 SIMD Optimisation</h2>
+        
+        <div class="subsection">
+            <p><code>std::simd</code> is headed for the post-C++23 standard; compilers already ship it under <code>&lt;experimental/simd&gt;</code>. It gives you <strong>auto‑vectorisation without writing AVX/NEON intrinsics</strong>. GR4's meta‑helpers make it trivial to support both scalar <em>and</em> vector paths.</p>
+        </div>
+
+        <h3>6.1 Detecting Whether SIMD Is Available</h3>
+        <div class="subsection">
+            <div class="code-placeholder">#include &lt;experimental/simd&gt;
+#if defined(__cpp_lib_simd)   // GCC ≥13 / Clang ≥16
+  // then &lt;experimental/simd&gt; is available
+#endif</div>
+            
+            <p>GR4 wraps this behind the convenience concept <code>gr::meta::any_simd&lt;V,T&gt;</code> used in the generated <code>processOne()</code> template.</p>
+        </div>
+
+        <h3>6.2 A Minimal Example</h3>
+        <div class="subsection">
+            <p>Below is the <strong>SIMD‑aware branch</strong> extracted from <em>Analog.hpp</em> (MultiplyConst):</p>
+            
+            <div class="code-placeholder">template&lt;gr::meta::t_or_simd&lt;T&gt; V&gt;
+[[nodiscard]] constexpr V processOne(const V& a) const noexcept {
+    if constexpr (gr::meta::any_simd&lt;V, T&gt;) {
+        return a * value;      // element‑wise vector multiply (AVX/NEON)
+    } else {
+        return a * value;      // plain scalar – same line, different type
+    }
+}</div>
+            
+            <p>Note the single line of math appears <strong>twice</strong>—one inside the SIMD branch, one outside. Most real blocks need <em>no extra code</em>: the compiler emits the vector loop for you.</p>
+        </div>
+
+        <h3>6.3 Fallback Strategy</h3>
+        <div class="subsection">
+            <p>If your compiler is older than GCC 13/Clang 16, <code>__cpp_lib_simd</code> is undefined and the scalar branch is chosen. Performance degrades gracefully, functionality remains identical.</p>
+        </div>
+
+        <h3>6.4 Benchmarking Tips</h3>
+        <div class="subsection">
+            <table class="comparison-table">
+                <tr>
+                    <th>Tip</th>
+                    <th>Command</th>
+                </tr>
+                <tr>
+                    <td><strong>Build with ‑O3 ‑march=native</strong></td>
+                    <td><code>cmake -DCMAKE_CXX_FLAGS="-O3 -march=native" ..</code></td>
+                </tr>
+                <tr>
+                    <td><strong>Time one block</strong></td>
+                    <td><code>gr_benchmark -b math::MultiplyConst -n 10M</code></td>
+                </tr>
+                <tr>
+                    <td><strong>Check assembly</strong></td>
+                    <td><code>objdump -dS libgnuradio‑math.so | grep -E "(ymm|zmm|vq)"</code></td>
+                </tr>
+            </table>
+            
+            <div class="highlight-box">
+                <strong>Rule of thumb:</strong> if you <em>see</em> <code>vfmadd</code> or <code>vmulps</code> in the disassembly, SIMD is working.
+            </div>
+        </div>
+    </div>
+
+    <!-- Section 7: Reflection System -->
+    <div class="section" id="reflection--registration-system">
+        <h2>7 Reflection & Registration System</h2>
+
+        <h3>7.1 Why Reflection?</h3>
+        <div class="subsection">
+            <p>GR4 can <strong>introspect</strong> a block at run‑time—ports, parameters, doc‑strings—thanks to a tiny header‑only reflection system. This powers future GUI builders and Python auto‑bindings.</p>
+        </div>
+
+        <h3>7.2 Dissecting an Example</h3>
+        <div class="subsection">
+            <div class="code-placeholder">struct MultiplyConst : gr::Block&lt;MultiplyConst&gt; {
+    PortIn&lt;float&gt;  in;
+    PortOut&lt;float&gt; out;
+    float          value = 1.0f;
+
+    GR_MAKE_REFLECTABLE(MultiplyConst, in, out, value);
+};</div>
+            
+            <p><code>GR_MAKE_REFLECTABLE</code>:</p>
+            
+            <ol>
+                <li>Registers each <strong>public</strong> member (<code>in</code>, <code>out</code>, <code>value</code>).</li>
+                <li>Emits metadata (type, default, doc string).</li>
+                <li>Auto‑generates setters/getters used by Python and YAML.</li>
+            </ol>
+        </div>
+
+        <h3>7.3 Registration One‑Liner</h3>
+        <div class="subsection">
+            <div class="code-placeholder">GR_REGISTER_BLOCK("gr::blocks::math::MultiplyConst",
+                  MultiplyConst,
+                  ([T], std::multiplies&lt;[T]&gt;),   // template params & functor
+                  [ float, double, std::complex&lt;float&gt;, std::complex&lt;double&gt; ])</div>
+            
+            <p>Parameters:</p>
+            
+            <ol>
+                <li><strong>Fully‑qualified name</strong> – becomes YAML path <em>and</em> Python import path.</li>
+                <li><strong>C++ symbol</strong> – the class or alias to instantiate.</li>
+                <li><strong>Template pack</strong> – how to splice the functor/type into the template.</li>
+                <li><strong>Type list</strong> – every concrete data type you want exposed.</li>
+            </ol>
+        </div>
+
+        <h3>7.4 Hot‑Reloading Parameters</h3>
+        <div class="subsection">
+            <p>Because <code>value</code> is reflected, you can change it in a flowgraph at run‑time:</p>
+            
+            <div class="code-placeholder">blk = gr.blocks.math.multiply_const_f()  # Python auto‑binding
+blk.value = 0.5   # halves the gain while the graph runs</div>
+            
+            <p>No extra C++ needed!</p>
+        </div>
+    </div>
+
+    <!-- Section 8: Testing -->
+    <div class="section" id="testing--validation">
+        <h2>8 Testing & Validation</h2>
+        
+        <div class="subsection">
+            <p>A good port is <strong>bit‑exact</strong> and has <strong>unit tests</strong> covering corner cases. GR4 ships a thin Boost.UT harness in <code>gnuradio‑4.0/testing</code>.</p>
+        </div>
+
+        <h3>8.1 Minimal Test Skeleton</h3>
+        <div class="subsection">
+            <div class="code-placeholder">#include &lt;boost/ut.hpp&gt;
+#include &lt;gnuradio-4.0/testing/TagMonitors.hpp&gt;
+
+using namespace boost::ut;
+using gr::blocks::math::MultiplyConst;
+
+"MultiplyConst scalar"_test = [] {
+    constexpr float k = 2.0f;
+    MultiplyConst&lt;float&gt; blk({{"value", k}});
+    expect(eq(blk.processOne(3.0f), 6.0f));
+};</div>
+        </div>
+
+        <h3>8.2 Graph‑Level Tests (qa_analog.cpp)</h3>
+        <div class="subsection">
+            <p><code>qa_analog.cpp</code> wires <strong>sources → DUT → sink</strong> inside an in‑memory graph and validates the full scheduler path.</p>
+            
+            <div class="code-placeholder">Graph g;
+auto& src = g.emplaceBlock&lt;TagSource&lt;float&gt;&gt;(
+    property_map{{"values", {1,2,3}}}
+);
+auto& mul = g.emplaceBlock&lt;MultiplyConst&lt;float&gt;&gt;(
+    property_map{{"value",2.0f}}
+);
+auto& snk = g.emplaceBlock&lt;TagSink&lt;float, ProcessFunction::USE_PROCESS_ONE&gt;&gt;();
+
+g.connect(src,"out",mul,"in");
+g.connect&lt;"out"&gt;(mul).to&lt;"in"&gt;(snk);
+
+expect(eq(scheduler::Simple{std::move(g)}.runAndWait().has_value(), true));</div>
+        </div>
+
+        <h3>8.3 CI Tips</h3>
+        <div class="subsection">
+            <p>Add a quick workflow to <code>.github/workflows/ci.yml</code>:</p>
+            
+            <div class="code-placeholder">- name: Build & test (Clang 18)
+  run: |
+    cmake -B build -S . -DCMAKE_CXX_COMPILER=clang++-18 -GNinja
+    ninja -C build -j$(nproc)
+    ctest --test-dir build -j$(nproc) --output-on-failure</div>
+            
+            <p>Enable multiple jobs for GCC/Clang, and add ASAN if possible.</p>
+        </div>
+    </div>
+
+    <!-- Section 9: Examples -->
+    <div class="section" id="complete-porting-examples">
+        <h2>9 Complete Porting Examples</h2>
+        
+        <div class="subsection">
+            <p>This section walks through <strong>three complete ports</strong> from scratch, showing the full transformation from GR3 to GR4 code.</p>
+        </div>
+
+        <h3>9.1 Simple Math Block: MultiplyConst</h3>
+        <div class="subsection">
+            <p><strong>GR3 Original:</strong></p>
+            
+            <div class="code-placeholder">// From gr-blocks/lib/multiply_const_ff_impl.cc
+class multiply_const_ff_impl : public multiply_const_ff {
+    float d_k;
+    
+public:
+    multiply_const_ff_impl(float k) : d_k(k) {}
+    
+    void set_k(float k) { d_k = k; }
+    float k() const { return d_k; }
+    
+    int work(int noutput_items,
+             gr_vector_const_void_star& input_items,
+             gr_vector_void_star& output_items) override {
+        const float* in = (const float*)input_items[0];
+        float* out = (float*)output_items[0];
+        
+        for (int i = 0; i < noutput_items; i++) {
+            out[i] = in[i] * d_k;
+        }
+        return noutput_items;
+    }
+};</div>
+            
+            <p><strong>GR4 Port:</strong></p>
+            
+            <div class="code-placeholder">// From gr4/blocks/math/Analog.hpp
+template&lt;typename T&gt;
+struct MultiplyConst : public gr::Block&lt;MultiplyConst&lt;T&gt;&gt; {
+    PortIn&lt;T&gt;  in;
+    PortOut&lt;T&gt; out;
+    T          value = T{1};  // reflected parameter
+    
+    // SIMD-aware processing
+    template&lt;gr::meta::t_or_simd&lt;T&gt; V&gt;
+    [[nodiscard]] constexpr V processOne(const V& a) const noexcept {
+        if constexpr (gr::meta::any_simd&lt;V, T&gt;) {
+            return a * value;  // vectorized multiply
+        } else {
+            return a * value;  // scalar multiply
+        }
+    }
+    
+    GR_MAKE_REFLECTABLE(MultiplyConst, in, out, value);
+};
+
+// Registration for all numeric types
+GR_REGISTER_BLOCK("gr::blocks::math::MultiplyConst", MultiplyConst,
+    [T], std::multiplies&lt;T&gt;,
+    [float, double, std::complex&lt;float&gt;, std::complex&lt;double&gt;]);</div>
+            
+            <p><strong>Key Changes:</strong></p>
+            <ul>
+                <li>✅ <strong>10× less code</strong> – single template instead of separate _ff, _cc variants</li>
+                <li>✅ <strong>Type safety</strong> – <code>PortIn&lt;T&gt;</code> vs raw void pointers</li>
+                <li>✅ <strong>SIMD support</strong> – automatic vectorization when available</li>
+                <li>✅ <strong>Reflection</strong> – parameter is automatically exposed to Python/YAML</li>
+                <li>✅ <strong>Zero boilerplate</strong> – no getter/setter methods needed</li>
+            </ul>
+        </div>
+
+        <h3>9.2 Stateful Block: Integrate</h3>
+        <div class="subsection">
+            <p><strong>GR3 Original:</strong></p>
+            
+            <div class="code-placeholder">// From gr-blocks/lib/integrate_ff_impl.cc
+class integrate_ff_impl : public integrate_ff {
+    int d_decim;
+    int d_count;
+    float d_sum;
+    
+public:
+    integrate_ff_impl(int decim) : d_decim(decim), d_count(0), d_sum(0) {}
+    
+    int work(int noutput_items,
+             gr_vector_const_void_star& input_items,
+             gr_vector_void_star& output_items) override {
+        const float* in = (const float*)input_items[0];
+        float* out = (float*)output_items[0];
+        
+        int j = 0;
+        for (int i = 0; i < noutput_items * d_decim; i++) {
+            d_sum += in[i];
+            d_count++;
+            if (d_count == d_decim) {
+                out[j++] = d_sum;
+                d_sum = 0;
+                d_count = 0;
+            }
+        }
+        return j;
+    }
+};</div>
+            
+            <p><strong>GR4 Port:</strong></p>
+            
+            <div class="code-placeholder">// From gr4/blocks/math/Analog.hpp
+template&lt;typename T&gt;
+struct Integrate : public gr::Block&lt;Integrate&lt;T&gt;&gt; {
+    PortIn&lt;T&gt;  in;
+    PortOut&lt;T&gt; out;
+    int        decim = 1;
+    
+private:
+    int d_count = 0;
+    T   d_sum = T{0};
+    
+public:
+    work_return_t processBulk(std::span&lt;const T&gt; input,
+                              std::span&lt;T&gt; output) {
+        std::size_t j = 0;
+        for (std::size_t i = 0; i < input.size() && j < output.size(); ++i) {
+            d_sum += input[i];
+            d_count++;
+            if (d_count == decim) {
+                output[j++] = d_sum;
+                d_sum = T{0};
+                d_count = 0;
+            }
+        }
+        return {j, Status::OK};
+    }
+    
+    GR_MAKE_REFLECTABLE(Integrate, in, out, decim);
+};</div>
+            
+            <p><strong>Key Changes:</strong></p>
+            <ul>
+                <li>✅ <strong>Safe spans</strong> – <code>std::span</code> prevents buffer overruns</li>
+                <li>✅ <strong>Clear return semantics</strong> – <code>work_return_t</code> explicitly shows items produced</li>
+                <li>✅ <strong>Modern C++</strong> – <code>std::size_t</code> for indices, uniform initialization</li>
+                <li>✅ <strong>Encapsulation</strong> – state variables are private, only <code>decim</code> is reflected</li>
+            </ul>
+        </div>
+
+        <h3>9.3 Advanced Processing: Argmax</h3>
+        <div class="subsection">
+            <p><strong>GR3 Original:</strong></p>
+            
+            <div class="code-placeholder">// From gr-blocks/lib/argmax_fs_impl.cc
+class argmax_fs_impl : public argmax_fs {
+    size_t d_vlen;
+    
+public:
+    argmax_fs_impl(size_t vlen) : d_vlen(vlen) {}
+    
+    int work(int noutput_items,
+             gr_vector_const_void_star& input_items,
+             gr_vector_void_star& output_items) override {
+        const float* in = (const float*)input_items[0];
+        short* out = (short*)output_items[0];
+        
+        for (int i = 0; i < noutput_items; i++) {
+            float max_val = in[i * d_vlen];
+            size_t max_idx = 0;
+            for (size_t j = 1; j < d_vlen; j++) {
+                if (in[i * d_vlen + j] > max_val) {
+                    max_val = in[i * d_vlen + j];
+                    max_idx = j;
+                }
+            }
+            out[i] = (short)max_idx;
+        }
+        return noutput_items;
+    }
+};</div>
+            
+            <p><strong>GR4 Port:</strong></p>
+            
+            <div class="code-placeholder">// From gr4/blocks/math/Analog.hpp
+template&lt;typename T&gt;
+struct Argmax : public gr::Block&lt;Argmax&lt;T&gt;&gt; {
+    PortIn&lt;T&gt;         in;
+    PortOut&lt;gr::Size_t&gt; out;
+    std::size_t       vlen = 1;
+    
+    work_return_t processBulk(std::span&lt;const T&gt; input,
+                              std::span&lt;gr::Size_t&gt; output) {
+        const std::size_t n_vectors = input.size() / vlen;
+        const std::size_t n_output = std::min(n_vectors, output.size());
+        
+        for (std::size_t i = 0; i < n_output; ++i) {
+            const auto vector_start = input.subspan(i * vlen, vlen);
+            const auto max_it = std::max_element(vector_start.begin(), 
+                                                vector_start.end());
+            output[i] = static_cast&lt;gr::Size_t&gt;(std::distance(vector_start.begin(), max_it));
+        }
+        
+        return {n_output, Status::OK};
+    }
+    
+    GR_MAKE_REFLECTABLE(Argmax, in, out, vlen);
+};</div>
+            
+            <p><strong>Key Changes:</strong></p>
+            <ul>
+                <li>✅ <strong>STL algorithms</strong> – <code>std::max_element</code> is optimized and readable</li>
+                <li>✅ <strong>Subspan safety</strong> – <code>input.subspan()</code> prevents out-of-bounds access</li>
+                <li>✅ <strong>Proper typing</strong> – <code>gr::Size_t</code> output (was <code>short</code>)</li>
+                <li>✅ <strong>Bounds checking</strong> – <code>std::min()</code> prevents buffer overrun</li>
+            </ul>
+        </div>
+
+        <h3>9.4 Common Porting Patterns</h3>
+        <div class="subsection">
+            <table class="comparison-table">
+                <tr>
+                    <th>Pattern</th>
+                    <th>GR3 Anti-Pattern</th>
+                    <th>GR4 Best Practice</th>
+                </tr>
+                <tr>
+                    <td><strong>Type variants</strong></td>
+                    <td>Separate _ff, _cc, _ii files</td>
+                    <td>Single template with type registration</td>
+                </tr>
+                <tr>
+                    <td><strong>Parameters</strong></td>
+                    <td>Private + getter/setter</td>
+                    <td>Public + reflection</td>
+                </tr>
+                <tr>
+                    <td><strong>Buffers</strong></td>
+                    <td>Raw pointers + manual indexing</td>
+                    <td><code>std::span</code> + bounds checking</td>
+                </tr>
+                <tr>
+                    <td><strong>State</strong></td>
+                    <td>Mix public/private inconsistently</td>
+                    <td>Private state, reflected parameters</td>
+                </tr>
+                <tr>
+                    <td><strong>Algorithms</strong></td>
+                    <td>Hand-rolled loops</td>
+                    <td>STL algorithms when possible</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <!-- Section 10: Best Practices -->
+    <div class="section" id="best-practices--conventions">
+        <h2>10 Best Practices & Conventions</h2>
+        
+        <div class="subsection">
+            <p>This section covers <strong>coding standards, naming conventions, and architectural patterns</strong> that make GR4 blocks maintainable and performant.</p>
+        </div>
+
+        <h3>10.1 Naming Conventions</h3>
+        <div class="subsection">
+            <table class="comparison-table">
+                <tr>
+                    <th>Element</th>
+                    <th>Convention</th>
+                    <th>Example</th>
+                    <th>Rationale</th>
+                </tr>
+                <tr>
+                    <td><strong>Block names</strong></td>
+                    <td>PascalCase</td>
+                    <td><code>MultiplyConst</code>, <code>FftFilter</code></td>
+                    <td>Matches C++ class naming</td>
+                </tr>
+                <tr>
+                    <td><strong>Port names</strong></td>
+                    <td>lowerCamel, descriptive</td>
+                    <td><code>in</code>, <code>out</code>, <code>taps</code></td>
+                    <td>Clear intent in Python</td>
+                </tr>
+                <tr>
+                    <td><strong>Parameters</strong></td>
+                    <td>snake_case</td>
+                    <td><code>sample_rate</code>, <code>cutoff_freq</code></td>
+                    <td>Consistent with GNU Radio tradition</td>
+                </tr>
+                <tr>
+                    <td><strong>Private members</strong></td>
+                    <td>d_ prefix</td>
+                    <td><code>d_history</code>, <code>d_taps</code></td>
+                    <td>Distinguishes from parameters</td>
+                </tr>
+                <tr>
+                    <td><strong>Template params</strong></td>
+                    <td>Single uppercase letter</td>
+                    <td><code>T</code>, <code>U</code>, <code>V</code></td>
+                    <td>Standard C++ convention</td>
+                </tr>
+            </table>
+        </div>
+
+        <h3>10.2 Performance Best Practices</h3>
+        <div class="subsection">
+            <div class="highlight-box">
+                <strong>Golden Rule:</strong> Write readable code first, then optimize the hot paths.
+            </div>
+            
+            <h4>Memory Management</h4>
+            <ul>
+                <li>✅ <strong>Prefer stack allocation</strong> – avoid <code>new</code>/<code>delete</code> in inner loops</li>
+                <li>✅ <strong>Use <code>std::span</code></strong> – zero-copy views instead of copying data</li>
+                <li>✅ <strong>Reserve vectors</strong> – <code>taps.reserve(expected_size)</code> prevents reallocations</li>
+                <li>❌ <strong>Avoid <code>std::vector&lt;bool&gt;</code></strong> – use <code>std::vector&lt;char&gt;</code> for better performance</li>
+            </ul>
+            
+            <h4>Algorithm Optimization</h4>
+            <ul>
+                <li>✅ <strong>Use STL algorithms</strong> – <code>std::transform</code>, <code>std::accumulate</code> are optimized</li>
+                <li>✅ <strong>Enable SIMD</strong> – implement <code>processOne()</code> with <code>gr::meta::t_or_simd</code></li>
+                <li>✅ <strong>Cache-friendly access</strong> – process data sequentially when possible</li>
+                <li>❌ <strong>Avoid branching in inner loops</strong> – use <code>std::conditional</code> or templates</li>
+            </ul>
+            
+            <h4>Compiler Hints</h4>
+            <div class="code-placeholder">// Good: Help the compiler optimize
+[[nodiscard]] constexpr auto processOne(const T& input) const noexcept {
+    // constexpr allows compile-time evaluation
+    // noexcept enables aggressive optimization
+    return input * gain;
+}
+
+// Bad: Runtime overhead
+auto processOne(const T& input) {
+    if (enable_processing) {  // branch in hot path
+        return input * gain;
+    }
+    return input;
+}</div>
+        </div>
+
+        <h3>10.3 Code Organization Patterns</h3>
+        <div class="subsection">
+            <h4>Single Responsibility Principle</h4>
+            <p>Each block should do <strong>one thing well</strong>:</p>
+            
+            <div class="code-placeholder">// Good: Clear, focused responsibility
+struct LowPassFilter : public gr::Block&lt;LowPassFilter&lt;T&gt;&gt; {
+    PortIn&lt;T&gt;  in;
+    PortOut&lt;T&gt; out;
+    float      cutoff_freq = 1000.0f;
+    // ... filter implementation
+};
+
+// Bad: Mixed responsibilities
+struct AudioProcessor : public gr::Block&lt;AudioProcessor&lt;T&gt;&gt; {
+    // Does filtering, AGC, and compression - too much!
+};</div>
+            
+            <h4>Template Parameter Guidelines</h4>
+            <ul>
+                <li>✅ <strong>Use concepts</strong> – <code>gr::meta::arithmetic&lt;T&gt;</code> constrains valid types</li>
+                <li>✅ <strong>Default to <code>float</code></strong> – most common use case</li>
+                <li>✅ <strong>Support complex types</strong> – <code>std::complex&lt;T&gt;</code> when mathematically valid</li>
+                <li>❌ <strong>Don't over-template</strong> – avoid templates for configuration that could be runtime parameters</li>
+            </ul>
+        </div>
+
+        <h3>10.4 Error Handling</h3>
+        <div class="subsection">
+            <h4>Input Validation</h4>
+            <div class="code-placeholder">// Good: Validate in constructor or setter
+struct Decimator : public gr::Block&lt;Decimator&lt;T&gt;&gt; {
+    int decim = 1;
+    
+    void validateParameters() {
+        if (decim <= 0) {
+            throw std::invalid_argument("Decimation must be positive");
+        }
+    }
+    
+    // Called automatically by reflection system
+    void setDecimation(int dec) {
+        decim = dec;
+        validateParameters();
+    }
+};</div>
+            
+            <h4>Graceful Degradation</h4>
+            <div class="code-placeholder">// Good: Fallback when SIMD unavailable
+template&lt;gr::meta::t_or_simd&lt;T&gt; V&gt;
+[[nodiscard]] constexpr V processOne(const V& input) const noexcept {
+    if constexpr (gr::meta::any_simd&lt;V, T&gt;) {
+        return performSIMDOperation(input);
+    } else {
+        return performScalarOperation(input);  // Always works
+    }
+}</div>
+        </div>
+
+        <h3>10.5 Testing Strategy</h3>
+        <div class="subsection">
+            <h4>Unit Test Coverage</h4>
+            <ul>
+                <li>✅ <strong>Test edge cases</strong> – zero, negative, NaN, infinity inputs</li>
+                <li>✅ <strong>Test all type variants</strong> – float, double, complex&lt;float&gt;, complex&lt;double&gt;</li>
+                <li>✅ <strong>Test parameter validation</strong> – invalid inputs should throw</li>
+                <li>✅ <strong>Test SIMD and scalar paths</strong> – ensure bit-exact results</li>
+            </ul>
+            
+            <h4>Integration Tests</h4>
+            <div class="code-placeholder">// Good: Test in realistic flowgraph
+"MultiplyConst in flowgraph"_test = [] {
+    Graph g;
+    auto& src = g.emplaceBlock&lt;TagSource&lt;float&gt;&gt;();
+    auto& mul = g.emplaceBlock&lt;MultiplyConst&lt;float&gt;&gt;({{"value", 2.0f}});
+    auto& snk = g.emplaceBlock&lt;TagSink&lt;float&gt;&gt;();
+    
+    g.connect(src, "out", mul, "in");
+    g.connect(mul, "out", snk, "in");
+    
+    scheduler::Simple{std::move(g)}.runAndWait();
+    // Verify results...
+};</div>
+        </div>
+
+        <h3>10.6 Documentation Standards</h3>
+        <div class="subsection">
+            <h4>Block Documentation</h4>
+            <div class="code-placeholder">/// @brief Multiply input signal by a constant factor
+/// 
+/// This block multiplies each input sample by a constant value.
+/// Supports SIMD acceleration when available.
+///
+/// @tparam T Input/output sample type (float, double, complex&lt;float&gt;, etc.)
+template&lt;typename T&gt;
+struct MultiplyConst : public gr::Block&lt;MultiplyConst&lt;T&gt;&gt; {
+    PortIn&lt;T&gt;  in;   ///< Input signal
+    PortOut&lt;T&gt; out;  ///< Output signal (input * value)
+    T value = T{1};  ///< @brief Multiplication factor @unit linear
+    
+    GR_MAKE_REFLECTABLE(MultiplyConst, in, out, value);
+};</div>
+            
+            <h4>Parameter Documentation</h4>
+            <ul>
+                <li>✅ <strong>Use @brief</strong> – concise description</li>
+                <li>✅ <strong>Include @unit</strong> – physical units (Hz, dB, linear, etc.)</li>
+                <li>✅ <strong>Document constraints</strong> – valid ranges, dependencies</li>
+                <li>✅ <strong>Example usage</strong> – Python snippet in docstring</li>
+            </ul>
+        </div>
+
+        <h3>10.7 Common Anti-Patterns to Avoid</h3>
+        <div class="subsection">
+            <table class="comparison-table">
+                <tr>
+                    <th>❌ Anti-Pattern</th>
+                    <th>✅ Better Approach</th>
+                    <th>Why</th>
+                </tr>
+                <tr>
+                    <td>Global state / singletons</td>
+                    <td>Dependency injection via constructor</td>
+                    <td>Testability, thread safety</td>
+                </tr>
+                <tr>
+                    <td>String-based configuration</td>
+                    <td>Strongly typed parameters</td>
+                    <td>Compile-time validation</td>
+                </tr>
+                <tr>
+                    <td>Deep inheritance hierarchies</td>
+                    <td>Composition over inheritance</td>
+                    <td>Flexibility, maintainability</td>
+                </tr>
+                <tr>
+                    <td>Premature optimization</td>
+                    <td>Profile-guided optimization</td>
+                    <td>Readable code first</td>
+                </tr>
+                <tr>
+                    <td>Magic numbers in code</td>
+                    <td>Named constants or parameters</td>
+                    <td>Self-documenting code</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <!-- Section 11: Troubleshooting -->
+    <div class="section" id="troubleshooting-common-issues">
+        <h2>11 Troubleshooting Common Issues</h2>
+        
+        <div class="subsection">
+            <p>This section covers the <strong>most common problems</strong> encountered during porting, with step-by-step solutions.</p>
+        </div>
+
+        <h3>11.1 Compilation Errors</h3>
+        <div class="subsection">
+            <h4>❌ "No matching function for call to 'gr::Block'"</h4>
+            <div class="code-placeholder">error: no matching function for call to 'gr::Block&lt;MyBlock&gt;::Block()'
+note: candidate expects 1 argument, 0 provided</div>
+            
+            <p><strong>✅ Solution:</strong> GR4 blocks need a property map constructor:</p>
+            
+            <div class="code-placeholder">// Bad: Missing constructor
+struct MyBlock : public gr::Block&lt;MyBlock&gt; {
+    // ...
+};
+
+// Good: Add property map constructor
+struct MyBlock : public gr::Block&lt;MyBlock&gt; {
+    explicit MyBlock(const property_map&amp; params = {}) {
+        // Initialize from params if needed
+    }
+    // ...
+};</div>
+            
+            <h4>❌ "Cannot convert 'const float*' to 'std::span&lt;float&gt;'"</h4>
+            <div class="code-placeholder">error: cannot convert 'const float*' to 'std::span&lt;float&gt;' in assignment</div>
+            
+            <p><strong>✅ Solution:</strong> Use <code>std::span&lt;const T&gt;</code> for input, <code>std::span&lt;T&gt;</code> for output:</p>
+            
+            <div class="code-placeholder">// Bad: Wrong const-ness
+work_return_t processBulk(std::span&lt;float&gt; input, std::span&lt;float&gt; output);
+
+// Good: Input should be const
+work_return_t processBulk(std::span&lt;const float&gt; input, std::span&lt;float&gt; output);</div>
+            
+            <h4>❌ "GR_MAKE_REFLECTABLE not found"</h4>
+            <div class="code-placeholder">error: 'GR_MAKE_REFLECTABLE' was not declared in this scope</div>
+            
+            <p><strong>✅ Solution:</strong> Include the reflection header:</p>
+            
+            <div class="code-placeholder">#include &lt;gnuradio-4.0/Block.hpp&gt;
+#include &lt;gnuradio-4.0/reflection.hpp&gt;  // Add this line</div>
+        </div>
+
+        <h3>11.2 Runtime Errors</h3>
+        <div class="subsection">
+            <h4>❌ "Block not found in registry"</h4>
+            <div class="code-placeholder">RuntimeError: Block 'gr::blocks::math::MyBlock' not found in registry</div>
+            
+            <p><strong>✅ Solution:</strong> Ensure your block is registered and linked:</p>
+            
+            <div class="code-placeholder">// 1. Add registration at end of header
+GR_REGISTER_BLOCK("gr::blocks::math::MyBlock", MyBlock, [T], [float, double]);
+
+// 2. Make sure it's compiled into the library
+// Check CMakeLists.txt includes your header
+
+// 3. Verify it's linked
+#include &lt;gnuradio-4.0/math/MyBlock.hpp&gt;  // Force instantiation</div>
+            
+            <h4>❌ "Scheduler hangs or crashes"</h4>
+            <div class="code-placeholder">Program hangs indefinitely or crashes with segmentation fault</div>
+            
+            <p><strong>✅ Solution:</strong> Check your work return and buffer handling:</p>
+            
+            <div class="code-placeholder">// Bad: Wrong return value
+work_return_t processBulk(std::span&lt;const T&gt; input, std::span&lt;T&gt; output) {
+    // ... process data ...
+    return {input.size(), Status::OK};  // WRONG: should return output.size()
+}
+
+// Good: Return actual items produced
+work_return_t processBulk(std::span&lt;const T&gt; input, std::span&lt;T&gt; output) {
+    std::size_t items_produced = std::min(input.size(), output.size());
+    // ... process data ...
+    return {items_produced, Status::OK};
+}</div>
+            
+            <h4>❌ "Port connection failed"</h4>
+            <div class="code-placeholder">RuntimeError: Cannot connect incompatible port types</div>
+            
+            <p><strong>✅ Solution:</strong> Check port type compatibility:</p>
+            
+            <div class="code-placeholder">// Bad: Type mismatch
+PortIn&lt;float&gt;    in;
+PortOut&lt;double&gt;  out;  // Different types!
+
+// Good: Consistent typing
+PortIn&lt;T&gt;   in;
+PortOut&lt;T&gt;  out;</div>
+        </div>
+
+        <h3>11.3 Performance Issues</h3>
+        <div class="subsection">
+            <h4>❌ "Block is slower than GR3 version"</h4>
+            <p><strong>✅ Debugging checklist:</strong></p>
+            
+            <ol>
+                <li><strong>Check compiler flags:</strong>
+                    <div class="code-placeholder">cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS="-O3 -march=native" ..</div>
+                </li>
+                <li><strong>Verify SIMD is working:</strong>
+                    <div class="code-placeholder">objdump -dS libgnuradio-math.so | grep -E "(ymm|zmm|vfmadd)"</div>
+                </li>
+                <li><strong>Profile hot paths:</strong>
+                    <div class="code-placeholder">perf record -g ./your_flowgraph
+perf report</div>
+                </li>
+                <li><strong>Check memory allocation:</strong>
+                    <div class="code-placeholder">valgrind --tool=massif ./your_flowgraph</div>
+                </li>
+            </ol>
+            
+            <h4>❌ "High CPU usage in scheduler"</h4>
+            <p><strong>✅ Solution:</strong> Optimize your processOne/processBulk implementation:</p>
+            
+            <div class="code-placeholder">// Bad: Inefficient inner loop
+for (std::size_t i = 0; i &lt; input.size(); ++i) {
+    output[i] = std::sin(input[i]);  // Expensive call per sample
+}
+
+// Good: Vectorized operation
+std::transform(input.begin(), input.end(), output.begin(), 
+               [](const auto&amp; x) { return std::sin(x); });</div>
+        </div>
+
+        <h3>11.4 SIMD-Related Issues</h3>
+        <div class="subsection">
+            <h4>❌ "SIMD code compiles but crashes"</h4>
+            <div class="code-placeholder">Segmentation fault in SIMD code path</div>
+            
+            <p><strong>✅ Solution:</strong> Check alignment and bounds:</p>
+            
+            <div class="code-placeholder">// Bad: Assumes aligned data
+template&lt;gr::meta::t_or_simd&lt;T&gt; V&gt;
+V processOne(const V&amp; input) {
+    // May crash if input not aligned
+    return input * 2.0f;
+}
+
+// Good: Let compiler handle alignment
+template&lt;gr::meta::t_or_simd&lt;T&gt; V&gt;
+V processOne(const V&amp; input) {
+    if constexpr (gr::meta::any_simd&lt;V, T&gt;) {
+        return input * static_cast&lt;V&gt;(2.0f);  // Explicit cast
+    } else {
+        return input * 2.0f;
+    }
+}</div>
+            
+            <h4>❌ "SIMD not being used despite compiler support"</h4>
+            <div class="code-placeholder"># No SIMD instructions in assembly output</div>
+            
+            <p><strong>✅ Solution:</strong> Check your template constraints:</p>
+            
+            <div class="code-placeholder">// Bad: Missing SIMD template
+void processOne(const T&amp; input) {
+    // Only scalar version
+}
+
+// Good: SIMD-aware template
+template&lt;gr::meta::t_or_simd&lt;T&gt; V&gt;
+[[nodiscard]] constexpr V processOne(const V&amp; input) const noexcept {
+    if constexpr (gr::meta::any_simd&lt;V, T&gt;) {
+        return input * value;  // SIMD path
+    } else {
+        return input * value;  // Scalar path
+    }
+}</div>
+        </div>
+
+        <h3>11.5 Testing and Validation Issues</h3>
+        <div class="subsection">
+            <h4>❌ "Unit tests fail intermittently"</h4>
+            <p><strong>✅ Solution:</strong> Check for floating-point precision issues:</p>
+            
+            <div class="code-placeholder">// Bad: Exact comparison
+expect(eq(result, expected));
+
+// Good: Tolerance-based comparison
+expect(approx(result, expected, 1e-6f));</div>
+            
+            <h4>❌ "Tests pass but flowgraph produces wrong output"</h4>
+            <p><strong>✅ Solution:</strong> Add integration tests with realistic data:</p>
+            
+            <div class="code-placeholder">// Test with actual signal processing chain
+"Integration test with realistic signal"_test = [] {
+    Graph g;
+    auto&amp; src = g.emplaceBlock&lt;SignalSource&lt;float&gt;&gt;({
+        {"frequency", 1000.0f},
+        {"sample_rate", 48000.0f}
+    });
+    auto&amp; dut = g.emplaceBlock&lt;MyBlock&lt;float&gt;&gt;();
+    auto&amp; snk = g.emplaceBlock&lt;VectorSink&lt;float&gt;&gt;();
+    
+    // ... connect and run ...
+    
+    // Verify output characteristics
+    auto output = snk.getData();
+    expect(output.size() &gt; 0);
+    // Check frequency domain, RMS, etc.
+};</div>
+        </div>
+
+        <h3>11.6 Build System Issues</h3>
+        <div class="subsection">
+            <h4>❌ "CMake can't find GR4 components"</h4>
+            <div class="code-placeholder">CMake Error: Could not find a configuration file for package "gnuradio"</div>
+            
+            <p><strong>✅ Solution:</strong> Set the correct CMake paths:</p>
+            
+            <div class="code-placeholder"># Option 1: Set CMAKE_PREFIX_PATH
+export CMAKE_PREFIX_PATH=/usr/local/lib/cmake/gnuradio:$CMAKE_PREFIX_PATH
+
+# Option 2: Use find_package with PATHS
+find_package(gnuradio REQUIRED PATHS /usr/local/lib/cmake/gnuradio)
+
+# Option 3: Install GR4 to standard location
+cmake --install build --prefix /usr/local</div>
+            
+            <h4>❌ "Linking errors with undefined symbols"</h4>
+            <div class="code-placeholder">undefined reference to `gr::blocks::math::MyBlock&lt;float&gt;::MyBlock()'</div>
+            
+            <p><strong>✅ Solution:</strong> Ensure proper template instantiation:</p>
+            
+            <div class="code-placeholder">// In your .cpp file (if you have one)
+template class MyBlock&lt;float&gt;;
+template class MyBlock&lt;double&gt;;
+template class MyBlock&lt;std::complex&lt;float&gt;&gt;;
+template class MyBlock&lt;std::complex&lt;double&gt;&gt;;
+
+// Or use explicit instantiation in header
+extern template class MyBlock&lt;float&gt;;</div>
+        </div>
+
+        <h3>11.7 Debugging Techniques</h3>
+        <div class="subsection">
+            <h4>Enable Debug Logging</h4>
+            <div class="code-placeholder"># Set environment variable
+export GR_LOG_LEVEL=DEBUG
+
+# Or in code
+gr::log::set_level(gr::log::Level::DEBUG);</div>
+            
+            <h4>Use GDB for Crashes</h4>
+            <div class="code-placeholder"># Compile with debug symbols
+cmake -DCMAKE_BUILD_TYPE=Debug ..
+
+# Run with GDB
+gdb ./your_program
+(gdb) run
+(gdb) bt  # when it crashes</div>
+            
+            <h4>AddressSanitizer for Memory Issues</h4>
+            <div class="code-placeholder"># Enable ASAN
+cmake -DCMAKE_CXX_FLAGS="-fsanitize=address -g" ..
+
+# Run your program - it will catch memory errors</div>
+        </div>
+
+        <h3>11.8 Common Gotchas</h3>
+        <div class="subsection">
+            <table class="comparison-table">
+                <tr>
+                    <th>❌ Common Mistake</th>
+                    <th>✅ Correct Approach</th>
+                    <th>Why It Matters</th>
+                </tr>
+                <tr>
+                    <td>Using <code>std::vector</code> in processOne</td>
+                    <td>Use fixed-size arrays or class members</td>
+                    <td>Allocation in hot path kills performance</td>
+                </tr>
+                <tr>
+                    <td>Forgetting <code>const</code> on input spans</td>
+                    <td><code>std::span&lt;const T&gt;</code> for inputs</td>
+                    <td>Prevents accidental modification</td>
+                </tr>
+                <tr>
+                    <td>Returning wrong item count</td>
+                    <td>Return actual items produced</td>
+                    <td>Scheduler needs accurate counts</td>
+                </tr>
+                <tr>
+                    <td>Missing <code>noexcept</code> on processOne</td>
+                    <td>Mark processOne as <code>noexcept</code></td>
+                    <td>Enables compiler optimizations</td>
+                </tr>
+                <tr>
+                    <td>Not testing edge cases</td>
+                    <td>Test with zero, NaN, infinity</td>
+                    <td>Real-world data is messy</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <!-- Section 12: Resources -->
+    <div class="section" id="resources--references">
+        <h2>12 Resources & References</h2>
+        
+        <div class="subsection">
+            <p>This section provides <strong>essential links, documentation, and community resources</strong> for GNU Radio 4.0 development.</p>
+        </div>
+
+        <h3>12.1 Official Documentation</h3>
+        <div class="subsection">
+            <table class="comparison-table">
+                <tr>
+                    <th>Resource</th>
+                    <th>URL</th>
+                    <th>Description</th>
+                </tr>
+                <tr>
+                    <td><strong>GNU Radio 4.0 Repository</strong></td>
+                    <td><a href="https://github.com/fair-acc/gnuradio4">github.com/fair-acc/gnuradio4</a></td>
+                    <td>Main development repository</td>
+                </tr>
+                <tr>
+                    <td><strong>API Documentation</strong></td>
+                    <td><a href="https://gnuradio.github.io/gr4-docs/">gnuradio.github.io/gr4-docs/</a></td>
+                    <td>Automatically generated API docs</td>
+                </tr>
+                <tr>
+                    <td><strong>GNU Radio Website</strong></td>
+                    <td><a href="https://www.gnuradio.org/">gnuradio.org</a></td>
+                    <td>Official project website</td>
+                </tr>
+                <tr>
+                    <td><strong>GR4 Design Documents</strong></td>
+                    <td><a href="https://github.com/fair-acc/gnuradio4/tree/main/docs">github.com/fair-acc/gnuradio4/docs</a></td>
+                    <td>Architecture and design rationale</td>
+                </tr>
+            </table>
+        </div>
+
+        <h3>12.2 Development Resources</h3>
+        <div class="subsection">
+            <h4>Build Environment</h4>
+            <ul>
+                <li><strong>Docker Container:</strong> <code>ghcr.io/fair-acc/gr4-build-container:latest</code></li>
+                <li><strong>CMake Presets:</strong> <code>cmake --list-presets</code> in repository</li>
+                <li><strong>CI/CD Examples:</strong> <code>.github/workflows/</code> directory</li>
+            </ul>
+            
+            <h4>Code Examples</h4>
+            <ul>
+                <li><strong>Block Examples:</strong> <code>blocks/</code> directory in repository</li>
+                <li><strong>Test Examples:</strong> <code>test/</code> directory for unit tests</li>
+                <li><strong>Benchmarks:</strong> <code>bench/</code> directory for performance tests</li>
+            </ul>
+        </div>
+
+        <h3>12.3 Community and Support</h3>
+        <div class="subsection">
+            <table class="comparison-table">
+                <tr>
+                    <th>Platform</th>
+                    <th>Link</th>
+                    <th>Purpose</th>
+                </tr>
+                <tr>
+                    <td><strong>Mailing List</strong></td>
+                    <td><a href="https://lists.gnu.org/mailman/listinfo/discuss-gnuradio">discuss-gnuradio@gnu.org</a></td>
+                    <td>General discussion and support</td>
+                </tr>
+                <tr>
+                    <td><strong>IRC Channel</strong></td>
+                    <td><code>#gnuradio</code> on <a href="https://libera.chat/">Libera.chat</a></td>
+                    <td>Real-time chat and quick questions</td>
+                </tr>
+                <tr>
+                    <td><strong>Stack Overflow</strong></td>
+                    <td><a href="https://stackoverflow.com/questions/tagged/gnuradio">stackoverflow.com/questions/tagged/gnuradio</a></td>
+                    <td>Programming questions and answers</td>
+                </tr>
+                <tr>
+                    <td><strong>GitHub Discussions</strong></td>
+                    <td><a href="https://github.com/fair-acc/gnuradio4/discussions">github.com/fair-acc/gnuradio4/discussions</a></td>
+                    <td>Feature requests and development discussion</td>
+                </tr>
+            </table>
+        </div>
+
+        <h3>12.4 Learning Resources</h3>
+        <div class="subsection">
+            <h4>C++ and Modern C++ Resources</h4>
+            <ul>
+                <li><strong>C++23 Features:</strong> <a href="https://en.cppreference.com/w/cpp/23">cppreference.com/w/cpp/23</a></li>
+                <li><strong>std::span Tutorial:</strong> <a href="https://en.cppreference.com/w/cpp/container/span">cppreference.com/w/cpp/container/span</a></li>
+                <li><strong>C++ Concepts:</strong> <a href="https://en.cppreference.com/w/cpp/concepts">cppreference.com/w/cpp/concepts</a></li>
+                <li><strong>Template Metaprogramming:</strong> <a href="https://en.cppreference.com/w/cpp/meta">cppreference.com/w/cpp/meta</a></li>
+            </ul>
+            
+            <h4>SIMD and Performance</h4>
+            <ul>
+                <li><strong>std::simd proposal:</strong> <a href="https://wg21.link/p0214">wg21.link/p0214</a></li>
+                <li><strong>Compiler support:</strong> <a href="https://en.cppreference.com/w/cpp/compiler_support">cppreference.com/w/cpp/compiler_support</a></li>
+                <li><strong>Performance analysis:</strong> <a href="https://github.com/google/benchmark">Google Benchmark</a></li>
+            </ul>
+        </div>
+
+        <h3>12.5 Development Tools</h3>
+        <div class="subsection">
+            <h4>Compilers and Build Systems</h4>
+            <table class="comparison-table">
+                <tr>
+                    <th>Tool</th>
+                    <th>Minimum Version</th>
+                    <th>Installation</th>
+                    <th>Notes</th>
+                </tr>
+                <tr>
+                    <td><strong>GCC</strong></td>
+                    <td>13.3 (14.2 for full simd)</td>
+                    <td><code>sudo apt install gcc-14</code></td>
+                    <td>Best C++23 support</td>
+                </tr>
+                <tr>
+                    <td><strong>Clang</strong></td>
+                    <td>18+</td>
+                    <td><code>sudo apt install clang-18</code></td>
+                    <td>Better diagnostics</td>
+                </tr>
+                <tr>
+                    <td><strong>CMake</strong></td>
+                    <td>3.25+</td>
+                    <td><code>pip install cmake</code></td>
+                    <td>Presets support</td>
+                </tr>
+                <tr>
+                    <td><strong>Ninja</strong></td>
+                    <td>Any</td>
+                    <td><code>sudo apt install ninja-build</code></td>
+                    <td>Fast parallel builds</td>
+                </tr>
+            </table>
+            
+            <h4>Development Environment</h4>
+            <ul>
+                <li><strong>VS Code Extensions:</strong> C/C++, CMake Tools, GitLens</li>
+                <li><strong>CLion:</strong> JetBrains IDE with excellent CMake support</li>
+                <li><strong>Vim/NeoVim:</strong> Language server protocol (LSP) with clangd</li>
+            </ul>
+        </div>
+
+        <h3>12.6 Testing and Quality Assurance</h3>
+        <div class="subsection">
+            <h4>Testing Frameworks</h4>
+            <ul>
+                <li><strong>Boost.UT:</strong> <a href="https://github.com/boost-ext/ut">github.com/boost-ext/ut</a> - Header-only unit testing</li>
+                <li><strong>Google Test:</strong> <a href="https://github.com/google/googletest">github.com/google/googletest</a> - Traditional C++ testing</li>
+                <li><strong>Catch2:</strong> <a href="https://github.com/catchorg/Catch2">github.com/catchorg/Catch2</a> - BDD-style testing</li>
+            </ul>
+            
+            <h4>Code Quality Tools</h4>
+            <ul>
+                <li><strong>AddressSanitizer:</strong> <code>-fsanitize=address</code> - Memory error detection</li>
+                <li><strong>Valgrind:</strong> <code>valgrind --tool=memcheck</code> - Memory debugging</li>
+                <li><strong>clang-tidy:</strong> Static analysis and linting</li>
+                <li><strong>clang-format:</strong> Code formatting</li>
+            </ul>
+        </div>
+
+        <h3>12.7 Related Projects and Dependencies</h3>
+        <div class="subsection">
+            <h4>Core Dependencies</h4>
+            <ul>
+                <li><strong>fmt:</strong> <a href="https://github.com/fmtlib/fmt">github.com/fmtlib/fmt</a> - String formatting</li>
+                <li><strong>spdlog:</strong> <a href="https://github.com/gabime/spdlog">github.com/gabime/spdlog</a> - Logging</li>
+                <li><strong>refl-cpp:</strong> <a href="https://github.com/veselink1/refl-cpp">github.com/veselink1/refl-cpp</a> - Reflection</li>
+                <li><strong>Folly:</strong> <a href="https://github.com/facebook/folly">github.com/facebook/folly</a> - Facebook's C++ library</li>
+            </ul>
+            
+            <h4>Optional Dependencies</h4>
+            <ul>
+                <li><strong>FFTW:</strong> <a href="http://www.fftw.org/">fftw.org</a> - Fast Fourier Transform</li>
+                <li><strong>UHD:</strong> <a href="https://github.com/EttusResearch/uhd">github.com/EttusResearch/uhd</a> - USRP drivers</li>
+                <li><strong>SoapySDR:</strong> <a href="https://github.com/pothosware/SoapySDR">github.com/pothosware/SoapySDR</a> - SDR abstraction</li>
+            </ul>
+        </div>
+
+        <h3>12.8 Contributing Guidelines</h3>
+        <div class="subsection">
+            <h4>Code Contribution Process</h4>
+            <ol>
+                <li><strong>Fork the repository</strong> on GitHub</li>
+                <li><strong>Create feature branch:</strong> <code>git checkout -b feature/my-new-block</code></li>
+                <li><strong>Follow coding standards:</strong> Use clang-format configuration</li>
+                <li><strong>Add tests:</strong> Unit tests and integration tests</li>
+                <li><strong>Sign commits:</strong> <code>git commit -s</code> (DCO required)</li>
+                <li><strong>Open pull request</strong> with clear description</li>
+            </ol>
+            
+            <h4>Code Review Guidelines</h4>
+            <ul>
+                <li>✅ <strong>All tests pass</strong> - CI must be green</li>
+                <li>✅ <strong>Documentation updated</strong> - README, code comments</li>
+                <li>✅ <strong>Performance considered</strong> - Benchmarks for critical paths</li>
+                <li>✅ <strong>Backwards compatibility</strong> - API changes need discussion</li>
+            </ul>
+        </div>
+
+        <h3>12.9 Research Papers and Publications</h3>
+        <div class="subsection">
+            <ul>
+                <li><strong>"GNU Radio 4.0: A Modern C++ Implementation"</strong> - Architecture paper</li>
+                <li><strong>"SIMD Optimization in Software Defined Radio"</strong> - Performance analysis</li>
+                <li><strong>"Template-Based DSP Block Design"</strong> - Design patterns</li>
+                <li><strong>"Reflection Systems in C++"</strong> - Metaprogramming techniques</li>
+            </ul>
+            
+            <p><em>Note: Some publications may still be in preparation. Check the repository for latest papers.</em></p>
+        </div>
+
+        <h3>12.10 Quick Reference</h3>
+        <div class="subsection">
+                         <h4>Essential Commands</h4>
+             <div class="code-placeholder"># Clone and build
+ git clone https://github.com/fair-acc/gnuradio4.git
+ cd gnuradio4
+ mkdir build && cd build
+ cmake -DCMAKE_BUILD_TYPE=Release ..
+ cmake --build . -j$(nproc)
+ 
+ # Run tests
+ ctest --output-on-failure
+ 
+ # Install
+ sudo cmake --install .
+ 
+ # Create new OOT module (if needed)
+ gr-template/bootstrap_oot.sh myblocks</div>
+            
+            <h4>Common Environment Variables</h4>
+            <div class="code-placeholder"># Logging
+export GR_LOG_LEVEL=DEBUG
+
+# Build optimization
+export CMAKE_BUILD_TYPE=Release
+export CMAKE_CXX_FLAGS="-O3 -march=native"
+
+# Python path (if needed)
+export PYTHONPATH=/usr/local/lib/python3.x/site-packages:$PYTHONPATH</div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <hr>
+        <p>
+            <strong>© 2025 Krish Gupta</strong> · Mentor: <em>Josh Morman</em> · Created for <strong>Google Summer of Code 2025</strong>
+        </p>
+        <p>
+            <em>Last updated: 2025‑07‑11</em>
+        </p>
+    </footer>
+</body>
+</html> 
