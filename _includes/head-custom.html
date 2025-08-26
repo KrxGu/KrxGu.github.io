@@ -1,0 +1,144 @@
+<!-- Custom CSS for GSoC 2025 blog -->
+<style>
+/* Custom styles for GSoC 2025 blog */
+
+/* Resource Links */
+.resource-links {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin: 30px 0;
+}
+
+.resource-button {
+    display: inline-block;
+    padding: 15px 25px;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 600;
+    text-align: center;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+}
+
+.resource-button.primary {
+    background-color: #007acc;
+    color: white;
+    border-color: #007acc;
+}
+
+.resource-button.primary:hover {
+    background-color: #005a9e;
+    border-color: #005a9e;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 122, 204, 0.3);
+}
+
+.resource-button.secondary {
+    background-color: #f8f9fa;
+    color: #495057;
+    border-color: #dee2e6;
+}
+
+.resource-button.secondary:hover {
+    background-color: #e9ecef;
+    border-color: #adb5bd;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Blog Posts */
+.blog-posts {
+    margin: 30px 0;
+}
+
+.post-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+    padding: 10px 0;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.post-date {
+    font-weight: 600;
+    color: #6c757d;
+    min-width: 100px;
+    margin-right: 15px;
+}
+
+.post-item a {
+    color: #007acc;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.post-item a:hover {
+    text-decoration: underline;
+    color: #005a9e;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .resource-links {
+        gap: 12px;
+    }
+    
+    .resource-button {
+        padding: 12px 20px;
+        font-size: 14px;
+    }
+    
+    .post-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+    }
+    
+    .post-date {
+        min-width: auto;
+        margin-right: 0;
+    }
+}
+
+/* Page Title */
+h1 {
+    color: #2c3e50;
+    margin-bottom: 20px;
+    font-size: 2.5rem;
+}
+
+/* Section Headers */
+h2 {
+    color: #34495e;
+    margin-top: 40px;
+    margin-bottom: 20px;
+    font-size: 1.8rem;
+    border-bottom: 2px solid #ecf0f1;
+    padding-bottom: 10px;
+}
+
+/* Footer */
+hr {
+    margin: 40px 0;
+    border: none;
+    border-top: 1px solid #ecf0f1;
+}
+
+/* Contributor Info */
+.contributor-info {
+    text-align: center;
+    color: #7f8c8d;
+    font-size: 0.9rem;
+    margin-top: 30px;
+}
+
+.contributor-info a {
+    color: #3498db;
+    text-decoration: none;
+}
+
+.contributor-info a:hover {
+    text-decoration: underline;
+}
+</style>
