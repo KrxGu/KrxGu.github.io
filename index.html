@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Krish Gupta - Software Engineer & Open Source Contributor</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #fff;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 2rem 0;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        
+        .name {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+        }
+        
+        .tagline {
+            font-size: 1.2rem;
+            color: #7f8c8d;
+            font-weight: 300;
+        }
+        
+        .section {
+            margin-bottom: 3rem;
+        }
+        
+        .section-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 1.5rem;
+            border-left: 4px solid #3498db;
+            padding-left: 1rem;
+        }
+        
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .project-card {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 1.5rem;
+            border: 1px solid #e9ecef;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        
+        .project-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .project-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+        }
+        
+        .project-meta {
+            font-size: 0.9rem;
+            color: #7f8c8d;
+            margin-bottom: 1rem;
+        }
+        
+        .project-description {
+            color: #555;
+            margin-bottom: 1rem;
+        }
+        
+        .project-link {
+            display: inline-block;
+            color: #3498db;
+            text-decoration: none;
+            font-weight: 500;
+            border-bottom: 1px solid transparent;
+            transition: border-color 0.2s ease;
+        }
+        
+        .project-link:hover {
+            border-bottom-color: #3498db;
+        }
+        
+        .contact {
+            background: #f8f9fa;
+            padding: 2rem;
+            border-radius: 8px;
+            text-align: center;
+        }
+        
+        .contact-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+        
+        .contact-link {
+            color: #3498db;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s ease;
+        }
+        
+        .contact-link:hover {
+            color: #2980b9;
+        }
+        
+        .intro {
+            font-size: 1.1rem;
+            color: #555;
+            text-align: center;
+            margin-bottom: 3rem;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .name {
+                font-size: 2rem;
+            }
+            
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .contact-links {
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1 class="name">Krish Gupta</h1>
+            <p class="tagline">Software Engineer & Open Source Contributor</p>
+        </header>
+        
+        <div class="intro">
+            <p>Welcome to my portfolio! I'm a passionate software engineer with expertise in systems programming, 
+            signal processing, and open source development. I enjoy building robust, performant software, 
+            contributing to meaningful open source projects, and writing about cutting-edge technologies in AI, 
+            distributed systems, and software architecture.</p>
+        </div>
+        
+        <section class="section">
+            <h2 class="section-title">Featured Projects</h2>
+            
+            <div class="projects-grid">
+                <div class="project-card">
+                    <h3 class="project-title">GNU Radio 4.0 Block Set Expansion</h3>
+                    <div class="project-meta">Google Summer of Code 2025 • GNU Radio</div>
+                    <p class="project-description">
+                        Ported and modernized critical signal processing blocks from GNU Radio 3.x to 4.0, 
+                        implementing modern C++23 features, template-first design, and comprehensive testing frameworks. 
+                        Delivered Math, Analog, and Digital block families with ~4k+ lines of code.
+                    </p>
+                    <a href="GSoC25_GNURADIO/" class="project-link">View Project Details →</a>
+                </div>
+                
+                <!-- Placeholder for future projects -->
+                <div class="project-card" style="opacity: 0.6; border: 2px dashed #dee2e6;">
+                    <h3 class="project-title">Future Project</h3>
+                    <div class="project-meta">Coming Soon</div>
+                    <p class="project-description">
+                        More exciting projects and contributions coming soon! This space will showcase 
+                        additional work in systems programming, web development, and open source contributions.
+                    </p>
+                    <span style="color: #adb5bd;">Stay tuned...</span>
+                </div>
+            </div>
+        </section>
+        
+        <section class="section">
+            <h2 class="section-title">Technical Blog</h2>
+            
+            <div class="projects-grid">
+                <div class="project-card">
+                    <h3 class="project-title">From Words to Ideas: How Large Concept Models are Teaching AI to Think Like Humans</h3>
+                    <div class="project-meta">Medium • AI/ML</div>
+                    <p class="project-description">
+                        Exploring the evolution from token-based to concept-based AI models and how they're bridging 
+                        the gap between human cognition and artificial intelligence.
+                    </p>
+                    <a href="https://medium.com/@krishgupta2832/from-words-to-ideas-how-large-concept-models-are-teaching-ai-to-think-like-humans-fcd5d43b3371" class="project-link" target="_blank">Read Article →</a>
+                </div>
+                
+                <div class="project-card">
+                    <h3 class="project-title">Monolith: How ByteDance Built TikTok's Brain</h3>
+                    <div class="project-meta">Medium • Distributed Systems</div>
+                    <p class="project-description">
+                        Deep dive into ByteDance's Monolith recommendation system architecture that powers 
+                        TikTok's personalized content delivery at massive scale.
+                    </p>
+                    <a href="https://medium.com/@krishgupta2832/monolith-how-bytedance-built-tiktoks-brain-10c9fc0bcdc5" class="project-link" target="_blank">Read Article →</a>
+                </div>
+                
+                <div class="project-card">
+                    <h3 class="project-title">Understanding Google Spanner: A Journey Through Time Stamps</h3>
+                    <div class="project-meta">Medium • Database Systems</div>
+                    <p class="project-description">
+                        Comprehensive analysis of Google Spanner's revolutionary approach to globally distributed 
+                        databases and its innovative use of synchronized timestamps.
+                    </p>
+                    <a href="https://medium.com/@krishgupta2832/understanding-google-spanner-a-journey-through-time-stamps-0177961000e2" class="project-link" target="_blank">Read Article →</a>
+                </div>
+                
+                <div class="project-card">
+                    <h3 class="project-title">Mastering the Art of Building Effective AI Agents</h3>
+                    <div class="project-meta">Medium • AI Engineering</div>
+                    <p class="project-description">
+                        Lessons from Anthropic and industry leaders on designing, implementing, and optimizing 
+                        AI agents for real-world applications.
+                    </p>
+                    <a href="https://medium.com/@krishgupta2832/mastering-the-art-of-building-effective-ai-agents-lessons-from-anthropic-and-beyond-ec9b0e5cd3e7" class="project-link" target="_blank">Read Article →</a>
+                </div>
+                
+                <div class="project-card">
+                    <h3 class="project-title">Beyond Tokens: How Latent Transformers are Redefining Efficiency</h3>
+                    <div class="project-meta">Medium • Machine Learning</div>
+                    <p class="project-description">
+                        Exploring latent transformer architectures and their impact on performance and efficiency 
+                        in modern language models and AI systems.
+                    </p>
+                    <a href="https://medium.com/@krishgupta2832/beyond-tokens-how-latent-transformers-are-redefining-efficiency-and-performance-in-language-models-43a54feccad5" class="project-link" target="_blank">Read Article →</a>
+                </div>
+            </div>
+            
+            <div style="text-align: center; margin-top: 2rem;">
+                <a href="https://medium.com/@krishgupta2832" class="project-link" target="_blank" style="font-size: 1.1rem; font-weight: 600;">View All Articles on Medium →</a>
+            </div>
+        </section>
+        
+        <section class="section">
+            <h2 class="section-title">About</h2>
+            <p style="font-size: 1.1rem; color: #555; max-width: 800px;">
+                I'm a Computer Science Engineering student at Manipal University Jaipur with a passion for 
+                low-level systems programming, digital signal processing, and software architecture. 
+                My experience ranges from modern C++ development to web technologies, with a focus on 
+                performance-critical applications and open source collaboration.
+            </p>
+        </section>
+        
+        <section class="section">
+            <div class="contact">
+                <h2 style="margin-bottom: 1rem; color: #2c3e50;">Let's Connect</h2>
+                <p style="color: #555; margin-bottom: 1rem;">
+                    Interested in collaboration or have questions about my work?
+                </p>
+                <div class="contact-links">
+                    <a href="https://github.com/KrxGu" class="contact-link">GitHub</a>
+                    <a href="https://linkedin.com/in/krish-gupta" class="contact-link">LinkedIn</a>
+                    <a href="mailto:krishom70@gmail.com" class="contact-link">Email</a>
+                </div>
+            </div>
+        </section>
+    </div>
+</body>
+</html>

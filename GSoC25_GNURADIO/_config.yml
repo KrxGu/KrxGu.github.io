@@ -1,0 +1,13 @@
+# Configuration for GSoC subdirectory
+baseurl: "/GSoC25_GNURADIO"
+permalink: /:year/:month/:day/:title/
+
+# Blog settings for this subdirectory
+paginate: 5
+paginate_path: "/blog/page:num/"
+
+# Collections
+collections:
+  posts:
+    output: true
+    permalink: /:year/:month/:day/:title/

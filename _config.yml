@@ -1,2 +1,23 @@
-title: "GSoC 2025 – GNU Radio Progress"
+title: "Krish Gupta - Portfolio"
+description: "Software Engineer & Open Source Contributor"
 remote_theme: jekyll/minima
+
+# Build settings
+markdown: kramdown
+highlighter: rouge
+plugins:
+  - jekyll-feed
+  - jekyll-sitemap
+
+# Collections for better organization
+collections:
+  projects:
+    output: true
+    permalink: /:collection/:name/
+
+# Exclude files
+exclude:
+  - README.md
+  - Gemfile
+  - Gemfile.lock
+  - vendor/
