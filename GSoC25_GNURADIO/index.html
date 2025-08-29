@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GSoC 2025 - GNU Radio 4.0 Block Set Expansion</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #fff;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .back-link {
+            display: inline-block;
+            color: #3498db;
+            text-decoration: none;
+            font-weight: 500;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid transparent;
+            transition: border-color 0.2s ease;
+        }
+        
+        .back-link:hover {
+            border-bottom-color: #3498db;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 2rem 0;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        
+        .project-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 1rem;
+        }
+        
+        .project-subtitle {
+            font-size: 1.3rem;
+            color: #7f8c8d;
+            font-weight: 300;
+            margin-bottom: 1.5rem;
+        }
+        
+        .project-meta {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+            font-size: 0.95rem;
+            color: #666;
+        }
+        
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .section {
+            margin-bottom: 3rem;
+        }
+        
+        .section-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 1.5rem;
+            border-left: 4px solid #3498db;
+            padding-left: 1rem;
+        }
+        
+        .docs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+        
+        .doc-card {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 1.5rem;
+            border: 1px solid #e9ecef;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        
+        .doc-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .doc-icon {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .doc-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+        }
+        
+        .doc-description {
+            color: #666;
+            margin-bottom: 1rem;
+        }
+        
+        .doc-link {
+            color: #3498db;
+            text-decoration: none;
+            font-weight: 500;
+            border-bottom: 1px solid transparent;
+            transition: border-color 0.2s ease;
+        }
+        
+        .doc-link:hover {
+            border-bottom-color: #3498db;
+        }
+        
+        .blog-posts {
+            margin-top: 1.5rem;
+        }
+        
+        .blog-post {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            border-left: 4px solid #3498db;
+        }
+        
+        .blog-post-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+        }
+        
+        .blog-post-date {
+            font-size: 0.9rem;
+            color: #7f8c8d;
+            margin-bottom: 0.5rem;
+        }
+        
+        .blog-post-excerpt {
+            color: #666;
+            font-size: 0.95rem;
+        }
+        
+        .project-info {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 2rem;
+            margin-top: 1.5rem;
+        }
+        
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .info-item {
+            text-align: center;
+        }
+        
+        .info-label {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+        }
+        
+        .info-value {
+            color: #666;
+        }
+        
+        .info-value a {
+            color: #3498db;
+            text-decoration: none;
+        }
+        
+        .info-value a:hover {
+            text-decoration: underline;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .project-title {
+                font-size: 2rem;
+            }
+            
+            .project-meta {
+                gap: 1rem;
+            }
+            
+            .docs-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="../" class="back-link">← Back to Portfolio</a>
+        
+        <header class="header">
+            <h1 class="project-title">GSoC 2025</h1>
+            <p class="project-subtitle">GNU Radio 4.0 Block Set Expansion</p>
+            <div class="project-meta">
+                <div class="meta-item">
+                    <span>🏢</span>
+                    <span>GNU Radio</span>
+                </div>
+                <div class="meta-item">
+                    <span>👨‍💼</span>
+                    <span>Mentor: Josh Morman</span>
+                </div>
+                <div class="meta-item">
+                    <span>📅</span>
+                    <span>May - August 2025</span>
+                </div>
+                <div class="meta-item">
+                    <span>💻</span>
+                    <span>C++23, Signal Processing</span>
+                </div>
+            </div>
+        </header>
+        
+        <section class="section">
+            <h2 class="section-title">Project Overview</h2>
+            <p style="font-size: 1.1rem; color: #555; margin-bottom: 1.5rem;">
+                This project focused on <strong>expanding the GNU Radio 4.0 block set</strong> by porting and modernizing 
+                critical signal processing blocks from GNU Radio 3.x to the new 4.0 architecture. The work involved 
+                implementing modern C++23 features, template-first design patterns, and comprehensive testing frameworks 
+                to deliver Math, Analog, and Digital block families totaling over 4,000 lines of code.
+            </p>
+            
+            <div style="background: #e8f6f3; border-left: 4px solid #16a085; padding: 1rem; border-radius: 4px;">
+                <strong>Key Achievement:</strong> Successfully delivered three complete block families (Math, Analog, Digital) 
+                with modern C++23 CRTP implementation, enabling GNU Radio 4.0 adoption without losing critical DSP functionality.
+            </div>
+        </section>
+        
+        <section class="section">
+            <h2 class="section-title">Documentation</h2>
+            
+            <div class="docs-grid">
+                <div class="doc-card">
+                    <div class="doc-icon">📊</div>
+                    <h3 class="doc-title">Final Report</h3>
+                    <p class="doc-description">
+                        Comprehensive project summary detailing technical contributions, engineering practices, 
+                        challenges overcome, and quantitative outcomes.
+                    </p>
+                    <a href="gsoc-final-report.html" class="doc-link">Read Full Report →</a>
+                </div>
+                
+                <div class="doc-card">
+                    <div class="doc-icon">📚</div>
+                    <h3 class="doc-title">Complete Porting Guide</h3>
+                    <p class="doc-description">
+                        Detailed technical guide for porting GNU Radio 3.x blocks to 4.0, covering API migration, 
+                        SIMD optimization, and best practices.
+                    </p>
+                    <a href="porting-guide.html" class="doc-link">View Guide →</a>
+                </div>
+                
+                <div class="doc-card">
+                    <div class="doc-icon">📖</div>
+                    <h3 class="doc-title">Quick Reference</h3>
+                    <p class="doc-description">
+                        Structured outline version of the porting guide for quick navigation and reference 
+                        during development work.
+                    </p>
+                    <a href="porting-guide-outline.html" class="doc-link">Quick Reference →</a>
+                </div>
+            </div>
+        </section>
+        
+        <section class="section">
+            <h2 class="section-title">Progress Blog</h2>
+            
+            <div class="blog-posts">
+                <div class="blog-post">
+                    <h3 class="blog-post-title">Week-3 Check-in (Mentor — Josh Morman)</h3>
+                    <div class="blog-post-date">May 29, 2025</div>
+                    <p class="blog-post-excerpt">Progress update on block implementation, testing frameworks, and technical decisions for the Math and Analog block families.</p>
+                    <a href="https://raw.githubusercontent.com/KrxGu/KrxGu.github.io/main/GSoC25_GNURADIO/_posts/2025-05-29-Meet%233-jmorman.md" class="doc-link">Read Post →</a>
+                </div>
+                
+                <div class="blog-post">
+                    <h3 class="blog-post-title">Week-2 Check-in (Mentor — Josh Morman)</h3>
+                    <div class="blog-post-date">May 22, 2025</div>
+                    <p class="blog-post-excerpt">Repository and workflow decisions, technical architecture discussions, and multi-header organization strategies.</p>
+                    <a href="https://raw.githubusercontent.com/KrxGu/KrxGu.github.io/main/GSoC25_GNURADIO/_posts/2025-05-22-Meet%232-jmorman.md" class="doc-link">Read Post →</a>
+                </div>
+                
+                <div class="blog-post">
+                    <h3 class="blog-post-title">First Mentor Meeting</h3>
+                    <div class="blog-post-date">May 16, 2025</div>
+                    <p class="blog-post-excerpt">Initial project planning, setup discussions, and establishing development workflows with mentor Josh Morman.</p>
+                    <a href="https://raw.githubusercontent.com/KrxGu/KrxGu.github.io/main/GSoC25_GNURADIO/_posts/2025-05-16-Meet%231-jmorman.md" class="doc-link">Read Post →</a>
+                </div>
+                
+                <div class="blog-post">
+                    <h3 class="blog-post-title">GSoC 2025 Kick-off: Expanding GNU Radio 4.0</h3>
+                    <div class="blog-post-date">May 13, 2025</div>
+                    <p class="blog-post-excerpt">Project introduction, motivation, and overview of the GNU Radio 4.0 block set expansion goals and expected outcomes.</p>
+                    <a href="https://raw.githubusercontent.com/KrxGu/KrxGu.github.io/main/GSoC25_GNURADIO/_posts/2025-05-13-GSoC-Kickoff.md" class="doc-link">Read Post →</a>
+                </div>
+            </div>
+        </section>
+        
+        <section class="section">
+            <div class="project-info">
+                <h2 style="text-align: center; margin-bottom: 2rem; color: #2c3e50;">Project Information</h2>
+                
+                <div class="info-grid">
+                    <div class="info-item">
+                        <div class="info-label">Repository</div>
+                        <div class="info-value">
+                            <a href="https://github.com/fair-acc/gnuradio4" target="_blank">fair-acc/gnuradio4</a>
+                        </div>
+                    </div>
+                    
+                    <div class="info-item">
+                        <div class="info-label">Organization</div>
+                        <div class="info-value">GNU Radio</div>
+                    </div>
+                    
+                    <div class="info-item">
+                        <div class="info-label">Technologies</div>
+                        <div class="info-value">C++23, CMake, Boost.UT</div>
+                    </div>
+                    
+                    <div class="info-item">
+                        <div class="info-label">Code Contribution</div>
+                        <div class="info-value">4,000+ LOC</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</body>
+</html>
