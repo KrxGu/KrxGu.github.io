@@ -1,7 +1,7 @@
 ---
-title: "Meet#5 jmorman"
+title: Mentor Meeting #5 – jmorman
 date: 2025-06-12
-description: "Weekly progress update for GNU Radio 4.0 Block Set Expansion project."
+description: Week-5 sync – Analog modulators implementation, repository transition, and Math PR review.
 layout: post
 ---
 
